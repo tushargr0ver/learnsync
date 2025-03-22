@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '../components/navbar';
+import Navbar from '../components/Navbar';
 import notesOrange from "../assets/notes_orange.png"
 import notesGreen from "../assets/notes_green.png"
 import notesRed from "../assets/notes_red.png"

@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage.jsx'; 
 import StudentHomePage from './pages/StudentHomePage.jsx';
 import TeacherHomePage from './pages/TeacherHomePage.jsx';
-import StudyMaterialTeacher from './pages/studyMaterialTeacher.jsx';
+import StudyMaterialTeacher from './pages/StudyMaterialTeacher.jsx';
 import AssessmentsTeacher from './pages/AssessmentsTeacher.jsx';
-import AIAssistance from './pages/AiAssistance.jsx';
 import LearningPractice from './pages/LearningPractice.jsx';
+import Chatbot from './pages/ChatBot.jsx';
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
         <Route path="/teacher-login" element={<TeacherHomePage />} />
         <Route path="/teacher-login/assessments" element={<AssessmentsTeacher/>} />
         <Route path="/teacher-login/study-material" element={<StudyMaterialTeacher/>} />
-        <Route path="/student-login/chat-ai" element={<AIAssistance/>} />
+        <Route path="/student-login/chat-ai" element={<Chatbot/>} />
       </Routes>
     </Router>
   );

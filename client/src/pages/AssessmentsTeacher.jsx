@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../components/navbar';
+import Navbar from '../components/Navbar';
 
 const AssessmentsTeacher = () => {
   const [assessments, setAssessments] = useState([
