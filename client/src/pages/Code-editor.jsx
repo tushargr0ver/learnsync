@@ -57,7 +57,7 @@ const JsCodeEditor = () => {
         </button>
       </div>
 
-      <div style={{ flex: 1, height: '50vh', padding: '10px', backgroundColor: '#e6f0ff' }}> {/* Adjusted Light blue editor */}
+      <div style={{ flex: 1, height: '50vh', padding: '10px', backgroundColor: 'black' }}> {/* Adjusted Light blue editor */}
         <MonacoEditor
           height="100%"
           language="javascript"
