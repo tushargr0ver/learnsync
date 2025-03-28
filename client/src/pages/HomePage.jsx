@@ -19,7 +19,7 @@ function HomePage() {
           {/* Main Header Section */}
           <div className="text-center mb-16 animate-fadeIn">
             <h2 className="text-5xl font-bold text-black/90 mb-4 transition-all duration-300 hover:scale-105 hover:text-[#0066CC]">
-              Transform Education with AI-Powered Learning
+            Transforming Education with Intelligent Conversations
             </h2>
             <p className="text-xl max-w-5xl text-gray-600 mx-auto mb-10">
               EduMorph revolutionizes education by seamlessly connecting students and teachers through immersive, AI-powered learning tools, personalized study assistance, and live, interactive collaboration. It’s where technology meets education to foster smarter, more engaging learning experiences.

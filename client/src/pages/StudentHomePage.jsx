@@ -114,7 +114,10 @@ const StudentHomePage = () => {
 
                         <div className="bg-white rounded-lg shadow border border-[#e2e2e2]">
 
-                            <div className='w-full h-52 bg-black rounded-lg'></div>
+                            <div className='w-full h-52 bg-black rounded-lg'><video className="w-full h-52 rounded-lg" controls>
+                <source src="/assets/videolesson.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video></div>
                             <div className='p-4'>
                                 <h3 className="text-xl mb-2 text-black/90">Machine Learning Basics</h3>
                                 <p className="text-gray-600 text-lg mb-4">Duration: 45 mins</p>
@@ -123,8 +126,10 @@ const StudentHomePage = () => {
                         </div>
 
                         <div className="bg-white  rounded-lg shadow border border-[#e2e2e2]">
-                            <div className='w-full h-52 bg-black rounded-lg'></div>
-                            <div className='p-4'>
+                        <div className='w-full h-52 bg-black rounded-lg'><video className="w-full h-52 rounded-lg" controls>
+                <source src="/assets/videolesson.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video></div>                            <div className='p-4'>
                                 <h3 className="text-xl mb-2 text-black/90">Introduction to Web Development</h3>
                                 <p className="text-gray-600 text-lg mb-4">Duration: 30 mins</p>
                                 <button className="mt-2 bg-blue-500 w-full text-white px-4 py-3 rounded hover:bg-gray-200 transition">Save for Later</button>
@@ -132,16 +137,20 @@ const StudentHomePage = () => {
                         </div>
                         
                         <div className="bg-white  rounded-lg shadow border border-[#e2e2e2]">
-                            <div className='w-full h-52 bg-black rounded-lg'></div>
-                            <div className='p-4'>
+                        <div className='w-full h-52 bg-black rounded-lg'><video className="w-full h-52 rounded-lg" controls>
+                <source src="/assets/videolesson.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video></div>                            <div className='p-4'>
                                 <h3 className="text-xl mb-2 text-black/90">Introduction to Web Development</h3>
                                 <p className="text-gray-600 text-lg mb-4">Duration: 30 mins</p>
                                 <button className="mt-2 bg-blue-500 w-full text-white px-4 py-3 rounded hover:bg-gray-200 transition">Save for Later</button>
                             </div>
                         </div>
                         <div className="bg-white  rounded-lg shadow border border-[#e2e2e2]">
-                            <div className='w-full h-52 bg-black rounded-lg'></div>
-                            <div className='p-4'>
+                        <div className='w-full h-52 bg-black rounded-lg'><video className="w-full h-52 rounded-lg" controls>
+                <source src="/assets/videolesson.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video></div>                            <div className='p-4'>
                                 <h3 className="text-xl mb-2 text-black/90">Introduction to Web Development</h3>
                                 <p className="text-gray-600 text-lg mb-4">Duration: 30 mins</p>
                                 <button className="mt-2 bg-blue-500 w-full text-white px-4 py-3 rounded hover:bg-gray-200 transition">Save for Later</button>
