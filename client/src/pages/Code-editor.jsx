@@ -1,9 +1,11 @@
-import React, { useState, useRef } from 'react';
-import MonacoEditor from '@monaco-editor/react';
+import React, { useState, useRef } from "react";
+import MonacoEditor from "@monaco-editor/react";
+import Navbar from "../components/Navbar";
 
 const JsCodeEditor = () => {
   const [code, setCode] = useState('console.log("Hello, JavaScript!");');
-  const [output, setOutput] = useState('');
+  const [output, setOutput] = useState("");
+  const [language, setLanguage] = useState("javascript");
   const editorRef = useRef(null);
 
   const handleEditorChange = (value) => {
@@ -14,14 +16,18 @@ const JsCodeEditor = () => {
     editorRef.current = editor;
   };
 
-  const runJavaScript = () => {
+  const runCode = () => {
+    if (language !== "javascript") {
+      setOutput("⚠️ Code execution is only available for JavaScript right now.");
+      return;
+    }
     try {
       const executeFunction = new Function(code);
       const consoleOutput = [];
 
       const originalConsoleLog = console.log;
       console.log = (...args) => {
-        consoleOutput.push(args.join(' '));
+        consoleOutput.push(args.join(" "));
         originalConsoleLog(...args);
       };
 
@@ -29,79 +35,66 @@ const JsCodeEditor = () => {
 
       console.log = originalConsoleLog;
 
-      setOutput(consoleOutput.join('\n'));
+      setOutput(consoleOutput.join("\n"));
     } catch (error) {
-      setOutput(`Error: ${error.message}`);
+      setOutput(`❌ Error: ${error.message}`);
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: 'white' }}>
-      <div style={{ display: 'flex', padding: '10px', backgroundColor: 'white', borderBottom: '1px solid #ccc' }}>
-        <button
-          onClick={runJavaScript}
-          style={{
-            marginLeft: '10px',
-            padding: '8px 16px',
-            backgroundColor: '#2196F3', // Blue run button
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            transition: 'background-color 0.3s ease',
-          }}
-          onMouseOver={(e) => (e.target.style.backgroundColor = '#1976D2')}
-          onMouseOut={(e) => (e.target.style.backgroundColor = '#2196F3')}
-        >
-          Run JavaScript
-        </button>
-      </div>
+    <>
+      <div className="flex flex-col items-center w-full bg-gray-100 py-6">
+        {/* Header with Language Selection & Run Code Button */}
+        <div className="flex items-center justify-between bg-white  p-4 rounded-lg w-full max-w-7xl">
+          <div className="flex items-center space-x-4">
+            <label className="text-gray-700 font-medium">Language:</label>
+            <select
+              className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+            >
+              <option value="javascript">JavaScript</option>
+              {/* Future expansion options */}
+              <option value="python" disabled>Python (Coming Soon)</option>
+              <option value="cpp" disabled>C++ (Coming Soon)</option>
+            </select>
+          </div>
+          <button
+            onClick={runCode}
+            className="px-5 py-2 bg-blue-500 text-white font-medium rounded-md shadow-md 
+                      hover:bg-blue-600 transition-all duration-300 focus:outline-none"
+          >
+            ▶ Run Code
+          </button>
+        </div>
 
-      <div style={{ flex: 1, height: '50vh', padding: '10px', backgroundColor: 'black' }}> {/* Adjusted Light blue editor */}
-        <MonacoEditor
-          height="100%"
-          language="javascript"
-          value={code}
-          onChange={handleEditorChange}
-          onMount={handleEditorDidMount}
-          options={{
-            minimap: { enabled: false },
-            selectOnLineNumbers: true,
-            roundedSelection: false,
-            readOnly: false,
-            fontSize: 14,
-            scrollBeyondLastLine: false,
-            automaticLayout: true,
-            theme: 'vs-dark', // Dark theme, but with a lighter blue background
-          }}
-        />
-      </div>
+        {/* Code Editor Section */}
+        <div className="w-full max-w-7xl p-4 mt-4 bg-black rounded-lg">
+          <MonacoEditor
+            height="50vh"
+            language={language}
+            value={code}
+            onChange={handleEditorChange}
+            onMount={handleEditorDidMount}
+            options={{
+              minimap: { enabled: false },
+              fontSize: 14,
+              scrollBeyondLastLine: false,
+              automaticLayout: true,
+              theme: "vs-dark",
+            }}
+          />
+        </div>
 
-      <div
-        style={{
-          height: '30vh',
-          padding: '10px',
-          borderTop: '1px solid #ccc',
-          overflowY: 'auto',
-          backgroundColor: 'white', // White output area
-          borderRadius: '0 0 4px 4px',
-        }}
-      >
-        <h3 style={{ marginBottom: '8px' }}>Output:</h3>
-        <pre
-          style={{
-            backgroundColor: '#f8f8f8',
-            padding: '8px',
-            borderRadius: '4px',
-            fontFamily: 'monospace',
-            fontSize: '14px',
-            overflowX: 'auto',
-          }}
-        >
-          {output}
-        </pre>
+        {/* Output Section */}
+        <div className="w-full max-w-7xl bg-white  p-5 border-t border-gray-300 overflow-y-auto mt-4 rounded-lg">
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">Output:</h3>
+          <pre className="bg-gray-200 p-4 rounded-md text-sm font-mono text-gray-900 overflow-x-auto">
+            {output || "⚡ Run your code to see the output here."}
+          </pre>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
