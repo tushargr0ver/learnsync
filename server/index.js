@@ -4,7 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 const JDoodle_CLIENT_ID = process.env.JDOODLE_ID;
 const JDoodle_CLIENT_SECRET = process.env.JDOODLE_SECRET;
@@ -73,6 +73,71 @@ app.post('/api/ask', async (req, res) => {
       return res.status(error.response.status).json({ error: 'Gemini API error.' });
     }
     res.status(500).json({ error: 'Failed to get answer from Gemini API.' });
+  }
+});
+
+
+
+app.post("/generate-quiz", async (req, res) => {
+  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+  if (!GEMINI_API_KEY) {
+    return res.status(500).json({ error: "GEMINI_API_KEY not set." });
+  }
+
+  try {
+    const { topic, difficulty } = req.body;
+    console.log("Received request to generate quiz");
+
+    if (!topic || !difficulty) {
+      return res.status(400).json({ error: "Topic and difficulty are required." });
+    }
+
+    // ✅ Updated API URL
+    const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent`;
+
+    const response = await axios.post(
+      apiUrl,
+      {
+        contents: [
+          {
+            parts: [
+              {
+                text: `Generate a ${difficulty} level quiz on ${topic} with 5 multiple-choice questions. Each question should have 4 options and one correct answer. Format it in JSON.`
+              }
+            ]
+          }
+        ]
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": GEMINI_API_KEY, // ✅ Correct API key usage
+        }
+      }
+    );
+
+    if (!response.data || !response.data.candidates || response.data.candidates.length === 0) {
+      console.error("Gemini API response malformed:", response.data);
+      return res.status(500).json({ error: "Failed to generate quiz, invalid response from API." });
+    }
+
+    let quizContent = response.data.candidates[0]?.content?.parts[0]?.text || "No quiz generated.";
+
+    // Remove triple backticks if present
+    quizContent = quizContent.replace(/```json|```/g, "").trim();
+
+    try {
+      quizContent = JSON.parse(quizContent);
+      res.json({ quiz: quizContent }); // Send response only if parsing succeeds
+    } catch (error) {
+      console.error("Error parsing quiz JSON:", error);
+      res.status(500).json({ error: "Invalid quiz format received from API." });
+    }
+
+  } catch (error) {
+    console.error("Error generating quiz:", error.response ? error.response.data : error.message);
+    res.status(500).json({ error: "Failed to generate quiz.", details: error.message });
   }
 });
 
