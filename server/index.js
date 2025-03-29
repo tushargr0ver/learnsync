@@ -4,10 +4,31 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = 5000;
+
+const JDoodle_CLIENT_ID = process.env.JDOODLE_ID;
+const JDoodle_CLIENT_SECRET = process.env.JDOODLE_SECRET;
 
 app.use(cors());
 app.use(express.json());
+
+
+app.post("/execute", async (req, res) => {
+  try {
+      const { script, language, versionIndex } = req.body;
+      const response = await axios.post("https://api.jdoodle.com/v1/execute", {
+          clientId: JDoodle_CLIENT_ID,
+          clientSecret: JDoodle_CLIENT_SECRET,
+          script,
+          language,
+          versionIndex,
+      });
+
+      res.json(response.data);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
 
 app.post('/api/ask', async (req, res) => {
   const { question } = req.body;

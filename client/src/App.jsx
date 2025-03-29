@@ -9,12 +9,16 @@ import LearningPractice from './pages/LearningPractice.jsx';
 import Chatbot from './pages/ChatBot.jsx';
 import JsCodeEditor from './pages/Code-editor.jsx';
 import Footer from './components/Footer.jsx';
+import SignIn from './components/Login.jsx';
+import SignUp from './components/SignUp.jsx';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/signup" element={<SignUp/>} />
+        <Route path="/login" element={<SignIn/>} />
         <Route path="/student-login" element={<StudentHomePage />} />
         <Route path="/student-login/learn" element={<LearningPractice />} />
         <Route path="/teacher-login" element={<TeacherHomePage />} />

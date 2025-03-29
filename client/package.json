@@ -13,11 +13,13 @@
     "@clerk/clerk-react": "^5.25.1",
     "@monaco-editor/react": "^4.7.0",
     "@rollup/rollup-linux-x64-gnu": "^4.36.0",
+    "@supabase/supabase-js": "^2.49.3",
     "autoprefixer": "^10.4.21",
     "axios": "^1.8.4",
     "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-feather": "^2.0.10",
     "react-router-dom": "^7.4.0",
     "react-syntax-highlighter": "^15.6.1"
   },

@@ -92,7 +92,7 @@ function HomePage() {
                     Tailored for Students & Teachers
                   </h2>
                   <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    EduMorph offers specialized features for both students and teachers to enhance the learning
+                    LearnSync offers specialized features for both students and teachers to enhance the learning
                     experience.
                   </p>
                 </div>
