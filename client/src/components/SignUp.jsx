@@ -114,7 +114,8 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
           className="flex items-center text-sm font-medium text-blue-600 hover:text-blue-500 mb-6 mx-auto"
         >
           <ChevronLeft size={16} className="mr-1" />
-          Back to Home
+          <a href="/">Back to Home</a>
+          
         </button>
         <div className="flex items-center justify-center">
           <span className="text-blue-600 text-3xl font-bold">Learn</span>
@@ -122,10 +123,13 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create your account</h2>
         <p className="mt-2 text-center text-sm text-gray-600">
+          <a href="/login">
           Already have an account?{" "}
+          
           <button onClick={onNavigateToLogin} className="font-medium text-blue-600 hover:text-blue-500">
             Sign in
           </button>
+          </a>
         </p>
       </div>
 
@@ -330,10 +334,10 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
 
           <div className="mt-6">
             <div className="relative">
-              <div className="absolute inset-0 flex items-center">
+              {/* <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
+              </div> */}
+              {/* <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white text-gray-500">Or sign up with</span>
               </div>
             </div>
@@ -378,7 +382,7 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
                     />
                   </svg>
                 </a>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

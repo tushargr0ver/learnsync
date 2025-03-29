@@ -14,10 +14,12 @@ const Navbar = () => {
     <nav className="bg-[#F8F9FA] py-4 w-full">
       <div className="max-w-full mx-auto px-6 flex justify-between items-center">
         {/* Left Section - EduMorph Brand */}
+        <a href="/">
         <h1 className="text-3xl font-bold text-black/90">
           Learn
           <span className="text-[#008CFF]">Sync</span>
         </h1>
+        </a>
 
         {/* Center Section - Navigation Links Based on Role */}
         {role && (

@@ -26,7 +26,7 @@ function HomePage() {
 
             {/* Get Started & Learn More Buttons */}
             <div className="space-x-6">
-              <Link to="/get-started">
+              <Link to="/signup">
                 <button className="bg-blue-500 text-white py-3 px-12 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-blue-600 hover:scale-105 shadow-md hover:shadow-xl">
                   Get Started
                 </button>
@@ -217,7 +217,9 @@ function HomePage() {
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <button className="bg-transparent border-2 border-white text-white py-3 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-sm hover:shadow-xl">
+                  <a href='/signup'>
                     Get Started now!
+                    </a>
                   </button>
                   <button className="px-8 py-3 text-lg font-medium border-2 border-white bg-white text-blue-500 rounded-lg hover:bg-white/10 hover:text-white">
                     Request Demo

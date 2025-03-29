@@ -10,7 +10,10 @@ import Chatbot from './pages/ChatBot.jsx';
 import JsCodeEditor from './pages/Code-editor.jsx';
 import Footer from './components/Footer.jsx';
 import SignIn from './components/Login.jsx';
+import Quiz from './components/Quiz.jsx';
 import SignUp from './components/SignUp.jsx';
+import ContactUs from './pages/ContactUs.jsx';
+
 
 function App() {
   return (
@@ -26,6 +29,8 @@ function App() {
         <Route path="/teacher-login/study-material" element={<StudyMaterialTeacher/>} />
         <Route path="/student-login/chat-ai" element={<Chatbot/>} /> 
         <Route path="/student-login/code-editor" element={<JsCodeEditor/>} />
+        <Route path="/quiz" element={<Quiz/>}/>
+        <Route path="/contact" element={<ContactUs/>} />
       </Routes>
       <Footer />
 
