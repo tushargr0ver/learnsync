@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import JsCodeEditor from './Code-editor';
+import CodeEditor from './Code-editor';
 
 const LearningPractice = () => {
   return (
@@ -25,7 +25,7 @@ const LearningPractice = () => {
         </div>
 
         {/* Code Editor Section */}
-        <JsCodeEditor/>
+        <CodeEditor/>
         
       </div>
     </div>
