@@ -15,8 +15,8 @@ const Navbar = () => {
       <div className="max-w-full mx-auto px-6 flex justify-between items-center">
         {/* Left Section - EduMorph Brand */}
         <h1 className="text-3xl font-bold text-black/90">
-          Edu
-          <span className="text-[#008CFF]">Morph</span>
+          Learn
+          <span className="text-[#008CFF]">Sync</span>
         </h1>
 
         {/* Center Section - Navigation Links Based on Role */}

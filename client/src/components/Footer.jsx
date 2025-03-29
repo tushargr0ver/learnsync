@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className="w-full border-t bg-background py-6 md:py-12">
+    <footer className="w-full flex justify-center border-t bg-background py-4 md:py-12">
       <div className="container px-4 md:px-6">
         <div className="grid gap-8 lg:grid-cols-4">
           <div className="space-y-4">
-            <div className="flex items-center gap-2 font-bold text-xl">
-              <span className="text-black">Edu</span>
-              <span className="text-[#008CFF]">Morph</span>
+            <div className="flex items-center font-bold text-xl">
+              <span className="text-black">Learn</span>
+              <span className="text-[#008CFF]">Sync</span>
             </div>
             <p className="text-md text-left text-gray-600">
               Transforming education with AI-powered learning tools and interactive features.

@@ -1,17 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
+import Navbar from "../components/Navbar";
 
 function Chatbot() {
-  const [question, setQuestion] = useState('');
+  const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const chatContainerRef = useRef(null);
 
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
     }
   }, [messages]);
 
@@ -23,21 +27,26 @@ function Chatbot() {
     e.preventDefault();
     if (!question.trim()) return;
 
-    setMessages((prevMessages) => [...prevMessages, { text: question, sender: 'user' }]);
-    setQuestion('');
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { text: question, sender: "user" },
+    ]);
+    setQuestion("");
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/ask', { question });
+      const response = await axios.post("http://localhost:5000/api/ask", {
+        question,
+      });
       setMessages((prevMessages) => [
         ...prevMessages,
-        { text: response.data.answer, sender: 'bot' },
+        { text: response.data.answer, sender: "bot" },
       ]);
     } catch (error) {
-      console.error('Error fetching answer:', error);
+      console.error("Error fetching answer:", error);
       setMessages((prevMessages) => [
         ...prevMessages,
-        { text: 'An error occurred. Please try again.', sender: 'bot', error: true },
+        { text: "An error occurred. Please try again.", sender: "bot", error: true },
       ]);
     } finally {
       setLoading(false);
@@ -45,66 +54,86 @@ function Chatbot() {
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '20px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <h1>Educational Chatbot</h1>
-      <div
-        ref={chatContainerRef}
-        style={{ height: '300px', overflowY: 'auto', marginBottom: '10px' }}
-      >
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            style={{
-              marginBottom: '10px',
-              textAlign: message.sender === 'user' ? 'right' : 'left',
-            }}
-          >
-            <div
-              style={{
-                display: 'inline-block',
-                padding: '10px',
-                borderRadius: '8px',
-                backgroundColor: message.sender === 'user' ? '#e0f7fa' : '#f0f0f0',
-                maxWidth: '70%',
-              }}
-            >
-              {message.text.includes('```') ? (
-                <SyntaxHighlighter language="python" style={dracula}>
-                  {message.text.substring(message.text.indexOf('```python') + 9, message.text.lastIndexOf('```'))}
-                </SyntaxHighlighter>
-              ) : (
-                message.text
-              )}
-              {message.error && <p style={{ color: 'red' }}>Error</p>}
-            </div>
-          </div>
-        ))}
-        {loading && <p>Loading...</p>}
-      </div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={question}
-          onChange={handleInputChange}
-          placeholder="Ask an educational question..."
-          style={{ width: '100%', padding: '10px', marginBottom: '10px', boxSizing: 'border-box' }}
-        />
-        <button
-          type="submit"
-          disabled={loading}
+    <>
+          <Navbar />
+
+    <div className="flex flex-col min-h-96 my-24 min-w-56 ">
+      <div className="flex flex-col flex-grow justify-center w-2/4 mx-auto gap-6 bg-white shadow-lg rounded-lg p-6 mt-4">
+        <h1 className="text-3xl font-semibold text-center text-black  mb-4">
+          Educational Chatbot
+        </h1>
+
+        {/* Chatbox */}
+        <div
+          ref={chatContainerRef}
+          className="flex flex-col space-y-3 overflow-y-auto p-4 bg-gray-50 rounded-lg transition-all duration-300"
           style={{
-            padding: '10px 20px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer',
-            width: '100%',
+            minHeight: "100px", // Start small
+            maxHeight: messages.length ? "500px" : "100px", // Expand as messages increase
           }}
         >
-          Ask
-        </button>
-      </form>
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`flex ${
+                message.sender === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`p-3 rounded-lg max-w-[75%] ${
+                  message.sender === "user"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-900"
+                }`}
+              >
+                {message.text.includes("```") ? (
+                  <SyntaxHighlighter
+                    language="python"
+                    style={dracula}
+                    className="rounded-md"
+                  >
+                    {message.text.substring(
+                      message.text.indexOf("```python") + 9,
+                      message.text.lastIndexOf("```")
+                    )}
+                  </SyntaxHighlighter>
+                ) : (
+                  message.text
+                )}
+                {message.error && <p className="text-red-500">Error</p>}
+              </div>
+            </div>
+          ))}
+
+          {loading && (
+            <div className="flex justify-start">
+              <div className="p-3 rounded-lg bg-gray-200 text-gray-900 animate-pulse">
+                Typing...
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Input Field */}
+        <form onSubmit={handleSubmit} className="mt-4 flex">
+          <input
+            type="text"
+            value={question}
+            onChange={handleInputChange}
+            placeholder="Ask an educational question..."
+            className="flex-grow px-4 py-2  text-black border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-blue-500  text-white px-6 py-2 rounded-r-lg hover:bg-blue-600 transition"
+          >
+            Ask
+          </button>
+        </form>
+      </div>
     </div>
+    </>
   );
 }
 

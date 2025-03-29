@@ -6,8 +6,8 @@ function GeneralNavBar() {
             <div className="max-w-full mx-auto px-6 flex justify-between items-center">
                 {/* Left Section - EduMorph */}
                 <h1 className="text-3xl font-bold text-black/90">
-                    Edu
-                    <span className="text-[#008CFF]">Morph</span>
+                    Learn
+                    <span className="text-[#008CFF]">Sync</span>
                 </h1>
 
                 {/* Center Section - Important Links */}
@@ -32,14 +32,14 @@ function GeneralNavBar() {
 
                 {/* Right Section - Signin Links */}
                 <div className="space-x-4">
-                    <Link to="/teacher-login">
-                        <button className="border text-black/90 border-[#e2e2e2] font-medium py-2 px-4 rounded-lg transition-all duration-200">
-                            Login as Teacher
+                    <Link to="/signup">
+                        <button className="border text-black/90 border-[#e2e2e2] font-medium py-2 px-8 rounded-lg transition-all duration-200">
+                            Signup
                         </button>
                     </Link>
-                    <Link to="/student-login">
-                        <button className="bg-[#008CFF] text-white py-2 px-4 font-medium rounded-lg transition-all duration-200 hover:bg-[#0066CC]">
-                            Login as Student
+                    <Link to="/login">
+                        <button className="bg-[#008CFF] text-white py-2 px-8 font-medium rounded-lg transition-all duration-200 hover:bg-[#0066CC]">
+                            Login
                         </button>
                     </Link>
 
