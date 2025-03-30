@@ -1,16 +1,44 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-require('dotenv').config();
+const dotenv = require('dotenv');
+const {createClient} = require('@supabase/supabase-js'); //it is a supabase client that helps us to connect to the Supabase db
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-const JDoodle_CLIENT_ID = process.env.JDOODLE_ID;
-const JDoodle_CLIENT_SECRET = process.env.JDOODLE_SECRET;
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY); //connecting to Supabse db
+console.log(process.env.SUPABASE_KEY)
 
 app.use(cors());
 app.use(express.json());
+
+// Get all messages (fetching the messages based of group_id)
+app.get('/messages/:group_id', async (req, res) => {
+  const { group_id } = req.params;
+  const { data, error } = await supabase
+      .from('messages')
+      .select('*')
+      .eq('group_id', group_id)
+      .order('created_at', { ascending: true });
+
+  if (error) return res.status(400).json({ error });
+  res.json(data);
+});
+
+// Create a new message (from the user to the group)
+app.post('/messages/', async (req, res) => {
+  const { group_id, sender_id, content } = req.body;
+  const { data, error } = await supabase
+      .from('messages')
+      .insert([{ group_id, sender_id, content }])
+      .select('*')
+
+  if (error) return res.status(400).json({ error });
+  res.json(data);
+});
 
 
 app.post("/execute", async (req, res) => {
@@ -93,7 +121,6 @@ app.post("/generate-quiz", async (req, res) => {
       return res.status(400).json({ error: "Topic and difficulty are required." });
     }
 
-    // ✅ Updated API URL
     const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent`;
 
     const response = await axios.post(
@@ -112,7 +139,7 @@ app.post("/generate-quiz", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": GEMINI_API_KEY, // ✅ Correct API key usage
+          "x-goog-api-key": GEMINI_API_KEY, 
         }
       }
     );
@@ -140,6 +167,10 @@ app.post("/generate-quiz", async (req, res) => {
     res.status(500).json({ error: "Failed to generate quiz.", details: error.message });
   }
 });
+
+app.get("/", (req,res)=>{
+  res.send("Server is running")
+})
 
 app.listen(port, () => {
   if (!process.env.GEMINI_API_KEY){

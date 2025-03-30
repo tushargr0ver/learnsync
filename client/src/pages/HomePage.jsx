@@ -15,13 +15,12 @@ function HomePage() {
         <div className="max-w-screen-xl mx-auto px-6 text-center">
 
           {/* Main Header Section */}
-          {/* Main Header Section */}
           <div className="text-center mb-16 animate-fadeIn">
             <h2 className="text-5xl font-bold text-black/90 mb-4 transition-all duration-300 hover:scale-105 ">
               Transform Education with AI-Powered Learning
             </h2>
             <p className="text-xl max-w-5xl text-gray-600 mx-auto mb-10">
-              LearnSync revolutionizes education by seamlessly connecting students and teachers through immersive, AI-powered learning tools, personalized study assistance, and live, interactive collaboration. It’s where technology meets education to foster smarter, more engaging learning experiences.
+              LearnSync revolutionizes education by seamlessly connecting students and teachers through immersive, AI-powered learning tools, personalized study assistance, and live, interactive collaboration. It s where technology meets education to foster smarter, more engaging learning experiences.
             </p>
 
             {/* Get Started & Learn More Buttons */}
@@ -50,7 +49,7 @@ function HomePage() {
                 Everything You Need to Know about LearnSync
               </h2>
               <p className="max-w-full px-36 text-gray-600 py-4 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              LearnSync combines AI-powered learning tools with interactive features to create a comprehensive educational experience for both students and teachers.
+                LearnSync combines AI-powered learning tools with interactive features to create a comprehensive educational experience for both students and teachers.
               </p>
             </div>
 
@@ -239,3 +238,4 @@ function HomePage() {
 }
 
 export default HomePage;
+
