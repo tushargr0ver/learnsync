@@ -27,13 +27,13 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/login" element={<SignIn/>} />
-        <Route path="/student-login/community" element={<Community/>} />
-        <Route path="/student-login" element={<StudentHomePage />} />
-        <Route path="/student-login/learn" element={<LearningPractice />} />
-        <Route path="/teacher-login" element={<TeacherHomePage />} />
-        <Route path="/teacher-login/assessments" element={<AssessmentsTeacher/>} />
-        <Route path="/teacher-login/study-material" element={<StudyMaterialTeacher/>} />
-        <Route path="/student-login/chat-ai" element={<Chatbot/>} /> 
+        <Route path="/student/:id/community" element={<Community/>} />
+        <Route path="/student/:id" element={<StudentHomePage />} />
+        <Route path="/student/:id/learn" element={<LearningPractice />} />
+        <Route path="/teacher/:id" element={<TeacherHomePage />} />
+        <Route path="/teacher/:id/assessments" element={<AssessmentsTeacher/>} />
+        <Route path="/teacher/:id/study-material" element={<StudyMaterialTeacher/>} />
+        <Route path="/student/:id/chat-ai" element={<Chatbot/>} /> 
         {/* <Route path="/student-login/code-editor" element={<JsCodeEditor/>} /> */}
         <Route path="/quiz" element={<Quiz/>}/>
         <Route path="/contact" element={<ContactUs/>} />

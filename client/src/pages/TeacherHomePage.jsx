@@ -1,7 +1,14 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import { useLocation, useParams } from "react-router-dom";
 
 const TeacherHomePage = () => {
+
+    
+   const {id} = useParams();
+   console.log({id});
+
+
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -23,13 +30,16 @@ const TeacherHomePage = () => {
         }
     };
 
+    const location = useLocation()
+const name = location.state?.user.user_metadata.full_name
+
     return (
         <div>
             <Navbar />
             <div className="container mx-auto px-6 py-8 bg-[#F8F9FA]">
 
                 {/* Header */}
-                <h1 className="text-3xl font-semibold text-gray-900">Welcome, Professor!</h1>
+                <h1 className="text-3xl font-semibold text-gray-900">Welcome, Professor {name}!</h1>
                 <p className="text-gray-700 text-lg mt-1">
                     You have <span className="text-blue-500 font-medium">2 lectures</span> and
                     <span className="text-blue-500 font-medium"> 4 assignments</span> to review today.
