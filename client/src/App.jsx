@@ -13,6 +13,11 @@ import SignIn from './components/Login.jsx';
 import Quiz from './components/Quiz.jsx';
 import SignUp from './components/SignUp.jsx';
 import ContactUs from './pages/ContactUs.jsx';
+import LearnMore from './pages/Learn-More.jsx'
+import StudyMaterials from './pages/StudyMaterials.jsx';
+import LiveClasses from './pages/LiveClasses.jsx';
+import AIPoweredLearning from './pages/AiPoweredLearning.jsx';
+import Community from './pages/Community.jsx';
 
 
 function App() {
@@ -22,15 +27,21 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/login" element={<SignIn/>} />
+        <Route path="/student-login/community" element={<Community/>} />
         <Route path="/student-login" element={<StudentHomePage />} />
         <Route path="/student-login/learn" element={<LearningPractice />} />
         <Route path="/teacher-login" element={<TeacherHomePage />} />
         <Route path="/teacher-login/assessments" element={<AssessmentsTeacher/>} />
         <Route path="/teacher-login/study-material" element={<StudyMaterialTeacher/>} />
         <Route path="/student-login/chat-ai" element={<Chatbot/>} /> 
-        <Route path="/student-login/code-editor" element={<JsCodeEditor/>} />
+        {/* <Route path="/student-login/code-editor" element={<JsCodeEditor/>} /> */}
         <Route path="/quiz" element={<Quiz/>}/>
         <Route path="/contact" element={<ContactUs/>} />
+        <Route path="/learn-more" element={<LearnMore/>} />
+        <Route path="/ai-powered-learning" element={<AIPoweredLearning/>} />
+        <Route path="/study" element={<StudyMaterials/>} />
+        <Route path="/live-classes" element={<LiveClasses/>} />
+
       </Routes>
       <Footer />
 

@@ -8,8 +8,10 @@ const Footer = () => {
         <div className="grid gap-8 lg:grid-cols-4">
           <div className="space-y-4">
             <div className="flex items-center font-bold text-xl">
+              <a href='/'>
               <span className="text-black">Learn</span>
               <span className="text-[#008CFF]">Sync</span>
+              </a>
             </div>
             <p className="text-md text-left text-gray-600">
               Transforming education with AI-powered learning tools and interactive features.

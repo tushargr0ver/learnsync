@@ -88,7 +88,7 @@ const ContactUs = ({ onNavigateToHome }) => {
       {/* Header */}
       <header className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-2 font-bold text-xl">
+          <div className="flex items-center  font-bold text-xl">
             <span className="text-blue-600">Learn</span>
             <span>Sync</span>
           </div>
@@ -454,17 +454,17 @@ const ContactUs = ({ onNavigateToHome }) => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-white border-t py-8">
+      {/* <footer className="bg-white border-t py-8">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-2 font-bold text-xl mb-4 md:mb-0">
-              <span className="text-blue-600">Edu</span>
-              <span>Morph</span>
+              <span className="text-blue-600">Learn</span>
+              <span>Sync</span>
             </div>
             <div className="text-sm text-gray-500">© 2025 LearnSync. All rights reserved.</div>
           </div>
         </div>
-      </footer>
+      </footer> */}
     </div>
   )
 }
