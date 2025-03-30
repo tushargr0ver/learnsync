@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useState } from "react"
 import { supabase } from '../utils/supabaseClient'; // Adjust the path
@@ -36,15 +36,16 @@ const Login = ({ onNavigateToSignup, onNavigateToHome }) => {
 
       // Successful login, navigate to appropriate page
       const { data: { user } } = await supabase.auth.getUser();
-      console.log("User object:", user); // Log the user object
+      // console.log("User object:", user); // Log the user object
+      const userData = user;
 
       if (user && user.user_metadata && user.user_metadata.role) {
         const userRole = user.user_metadata.role;
 
         if (userRole === 'student') {
-          navigate('/student-dashboard');
+          navigate(`/student/${user.id}`, {state : {user : userData}});
         } else if (userRole === 'teacher') {
-          navigate('/teacher-dashboard');
+          navigate(`/teacher/${user.id}`, {state : {user : userData}});
         } else {
           navigate('/'); // Default case
         }

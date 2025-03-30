@@ -85,14 +85,15 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
           },
         })
 
+
         if (error) {
           setErrors({ signup: error.message })
         } else {
           console.log("Signup successful:", data)
           if (role === 'student') {
-            navigate('/student-login'); // Navigate using navigate
+            navigate('/login' ); // Navigate using navigate
           } else if (role === 'teacher') {
-            navigate('/teacher-login'); // Navigate using navigate
+            navigate('/login'); // Navigate using navigate
           } else {
             navigate('/'); // Default case
           }
