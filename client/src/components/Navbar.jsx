@@ -33,10 +33,10 @@ const Navbar = () => {
                   Home
                 </Link>
                 <Link
-                  to="/discussions"
+                  to="/community"
                   className="text-gray-600 hover:text-[#008CFF] font-semibold py-2 px-4 transition-all duration-200"
                 >
-                  Discussions
+                  Community
                 </Link>
                 <Link
                   to="/student-login/chat-ai"
