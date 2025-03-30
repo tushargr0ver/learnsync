@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@clerk/clerk-react": "^5.25.1",
     "@monaco-editor/react": "^4.7.0",
     "@rollup/rollup-linux-x64-gnu": "^4.36.0",
     "@supabase/supabase-js": "^2.49.3",
