@@ -1,14 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const TeacherHomePage = () => {
 
+    useEffect(()=>{
+            const savedSession = localStorage.getItem("supabaseSession");
+            if(!savedSession) navigate('/');
+    const session = savedSession ? JSON.parse(savedSession) : null;
+console.log(session);
+setName(session.user.user_metadata.full_name)
+
     
-   const {id} = useParams();
-   console.log({id});
+        },[])
+    
+//    const {id} = useParams();
+//    console.log({id});
 
-
+    const [name, setName] = useState('')
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -30,8 +39,14 @@ const TeacherHomePage = () => {
         }
     };
 
-    const location = useLocation()
-const name = location.state?.user.user_metadata.full_name
+
+    const navigate = useNavigate()
+
+//     const location = useLocation()
+// const name = location.state?.user.user_metadata.full_name
+
+
+
 
     return (
         <div>
@@ -39,7 +54,7 @@ const name = location.state?.user.user_metadata.full_name
             <div className="container mx-auto px-6 py-8 bg-[#F8F9FA]">
 
                 {/* Header */}
-                <h1 className="text-3xl font-semibold text-gray-900">Welcome, Professor {name}!</h1>
+                <h1 className="text-3xl font-semibold text-gray-900">Welcome, Professor {name} </h1>
                 <p className="text-gray-700 text-lg mt-1">
                     You have <span className="text-blue-500 font-medium">2 lectures</span> and
                     <span className="text-blue-500 font-medium"> 4 assignments</span> to review today.

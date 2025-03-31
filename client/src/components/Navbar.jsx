@@ -1,14 +1,14 @@
 import { useLocation, Link } from "react-router-dom";
 
 const Navbar = () => {
-  const location = useLocation();
+  // const location = useLocation();
 
   // Determine role from URL
-  const role = location.pathname.includes("teacher-login")
-    ? "teacher"
-    : location.pathname.includes("student-login")
-    ? "student"
-    : null;
+  const savedSession = localStorage.getItem("supabaseSession");
+  const session = savedSession ? JSON.parse(savedSession) : null;
+const user = session.user
+      if (user && user.user_metadata && user.user_metadata.role) {
+        const role = user.user_metadata.role;
 
   return (
     <nav className="bg-[#F8F9FA] py-4 w-full">
@@ -39,13 +39,13 @@ const Navbar = () => {
                   Community
                 </Link>
                 <Link
-                  to="/student-login/chat-ai"
+                  to="/student/chat-ai"
                   className="text-gray-600 hover:text-[#008CFF] font-semibold py-2 px-4 transition-all duration-200"
                 >
                   AI Assistance
                 </Link>
                 <Link
-                  to="/student-login/learn"
+                  to="/student/learn"
                   className="text-gray-600 hover:text-[#008CFF] font-semibold py-2 px-4 transition-all duration-200"
                 >
                   Learning and Practice
@@ -60,13 +60,13 @@ const Navbar = () => {
             ) : role === "teacher" ? (
               <>
               <Link
-                  to="/teacher-login"
+                  to="/teacher"
                   className="text-gray-600 hover:text-[#008CFF] font-semibold py-2 px-4 transition-all duration-200"
                 >
                   Home
                 </Link>
                 <Link
-                  to="/teacher-login/study-material"
+                  to="/teacher/study-material"
                   className="text-gray-600 hover:text-[#008CFF] font-semibold py-2 px-4 transition-all duration-200"
                 >
                   Study Material
@@ -78,7 +78,7 @@ const Navbar = () => {
                   Live Sessions
                 </Link>
                 <Link
-                  to="/teacher-login/assessments"
+                  to="/teacher/assessments"
                   className="text-gray-600 hover:text-[#008CFF] font-semibold py-2 px-4 transition-all duration-200"
                 >
                   Assessments
@@ -105,5 +105,6 @@ const Navbar = () => {
     </nav>
   );
 };
+}
 
 export default Navbar;
