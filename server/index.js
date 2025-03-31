@@ -110,6 +110,7 @@ app.post('/api/ask', async (req, res) => {
 
 app.post("/generate-quiz", async (req, res) => {
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+  console.log(GEMINI_API_KEY)
 
   if (!GEMINI_API_KEY) {
     return res.status(500).json({ error: "GEMINI_API_KEY not set." });
@@ -141,7 +142,7 @@ app.post("/generate-quiz", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": GEMINI_API_KEY, 
+          "x-goog-api-key": GEMINI_API_KEY, // ✅ Correct API key usage
         }
       }
     );
@@ -169,6 +170,7 @@ app.post("/generate-quiz", async (req, res) => {
     res.status(500).json({ error: "Failed to generate quiz.", details: error.message });
   }
 });
+
 
 app.get("/", (req,res)=>{
   res.send("Server is running")

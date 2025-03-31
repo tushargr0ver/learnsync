@@ -10,7 +10,6 @@ import Chatbot from './pages/ChatBot.jsx';
 import JsCodeEditor from './pages/Code-editor.jsx';
 import Footer from './components/Footer.jsx';
 import SignIn from './components/Login.jsx';
-import Quiz from './components/Quiz.jsx';
 import SignUp from './components/SignUp.jsx';
 import ContactUs from './pages/ContactUs.jsx';
 import LearnMore from './pages/Learn-More.jsx'
@@ -18,6 +17,7 @@ import StudyMaterials from './pages/StudyMaterials.jsx';
 import LiveClasses from './pages/LiveClasses.jsx';
 import AIPoweredLearning from './pages/AiPoweredLearning.jsx';
 import Community from './pages/Community.jsx';
+import Quiz from './pages/Quiz.jsx';
 
 
 function App() {
@@ -41,6 +41,7 @@ function App() {
         <Route path="/ai-powered-learning" element={<AIPoweredLearning/>} />
         <Route path="/study" element={<StudyMaterials/>} />
         <Route path="/live-classes" element={<LiveClasses/>} />
+        <Route path='/quiz' element={<Quiz/>} />
 
       </Routes>
       <Footer />

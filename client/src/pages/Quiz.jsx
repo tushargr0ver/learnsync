@@ -8,7 +8,7 @@ const Quiz = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [score, setScore] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(300); // 5 minutes total
+    const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
     const [quizOver, setQuizOver] = useState(false);
 
     const generateQuiz = async () => {
@@ -20,7 +20,9 @@ const Quiz = () => {
                 setCurrentQuestion(0);
                 setScore(0);
                 setQuizOver(false);
-                setTimeLeft(300); // Reset timer to 5 minutes
+                setTimeLeft(300); // Reset timer
+
+                console.log("Quiz Data:", response.data.quiz);
             } else {
                 setQuiz("Failed to generate quiz. Try again.");
             }
@@ -31,13 +33,13 @@ const Quiz = () => {
     };
 
     // Handle option selection
-    const handleOptionSelect = (isCorrect) => {
-        setSelectedOption(isCorrect);
+    const handleOptionSelect = (option) => {
+        setSelectedOption(option);
     };
 
     // Handle moving to the next question
     const handleNextQuestion = () => {
-        if (selectedOption) {
+        if (selectedOption === quiz.questions[currentQuestion].correctAnswer) {
             setScore(score + 1);
         }
 
@@ -49,7 +51,7 @@ const Quiz = () => {
         }
     };
 
-    // Timer effect (5 minutes for the entire quiz)
+    // Timer effect
     useEffect(() => {
         if (!quiz || quizOver) return;
 
@@ -57,7 +59,7 @@ const Quiz = () => {
             setTimeLeft((prevTime) => {
                 if (prevTime === 1) {
                     clearInterval(timer);
-                    setQuizOver(true); // End quiz when time is up
+                    setQuizOver(true);
                 }
                 return prevTime - 1;
             });
@@ -94,7 +96,7 @@ const Quiz = () => {
                 </button>
             </div>
 
-            {quiz && !quizOver && (
+            {quiz && !quizOver && quiz.questions.length > 0 && (
                 <div className="mt-6 p-6 bg-white rounded-lg shadow-md w-full max-w-lg">
                     <h2 className="text-xl font-semibold text-gray-700 mb-4">{quiz.quizTitle}</h2>
                     <p className="text-gray-600">Time left: <span className="font-bold">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</span></p>
@@ -105,12 +107,11 @@ const Quiz = () => {
                                 <li
                                     key={i}
                                     className={`p-2 text-black bg-gray-100 rounded mt-1 cursor-pointer 
-                                        ${selectedOption !== null && option.isCorrect ? "bg-green-400" : ""} 
-                                        ${selectedOption !== null && !option.isCorrect ? "bg-red-400" : ""}`
+                                        ${selectedOption === option ? (option === quiz.questions[currentQuestion].correctAnswer ? "bg-green-400" : "bg-red-400") : ""}`
                                     }
-                                    onClick={() => handleOptionSelect(option.isCorrect)}
+                                    onClick={() => handleOptionSelect(option)}
                                 >
-                                    {option.text}
+                                    {option}
                                 </li>
                             ))}
                         </ul>
@@ -143,4 +144,4 @@ const Quiz = () => {
     );
 };
 
-export default Quiz;
+export default Quiz
