@@ -2,14 +2,13 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const {createClient} = require('@supabase/supabase-js'); //it is a supabase client that helps us to connect to the Supabase db
+const  supabase = require('./config/supabase.js')
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY); //connecting to Supabse db
 console.log(process.env.SUPABASE_KEY)
 
 app.use(cors());
@@ -112,7 +111,6 @@ app.post("/generate-quiz", async (req, res) => {
   if (!GEMINI_API_KEY) {
     return res.status(500).json({ error: "GEMINI_API_KEY not set." });
   }
-
   try {
     const { topic, difficulty } = req.body;
     console.log("Received request to generate quiz");

@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { supabase } from '../utils/supabaseClient';
 import { Eye, EyeOff, Mail, Lock, User, ChevronLeft } from "react-feather"
