@@ -1,6 +1,6 @@
 
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { supabase } from '../utils/supabaseClient'; // Adjust the path
 import { Eye, EyeOff, Mail, Lock, ChevronLeft } from "react-feather"
 import { useNavigate } from 'react-router-dom';
@@ -13,42 +13,86 @@ const Login = ({ onNavigateToSignup, onNavigateToHome }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+
+  useEffect(()=>{
+    const savedSession = localStorage.getItem("supabaseSession");
+    if(savedSession){
+      const session = savedSession ? JSON.parse(savedSession) : null;
+const user = session.user
+      if (user && user.user_metadata && user.user_metadata.role) {
+        const userRole = user.user_metadata.role;
+
+        if (userRole === 'student') {
+          navigate(`/student`);
+        } else if (userRole === 'teacher') {
+          navigate(`/teacher`);
+        } else {
+          navigate('/'); // Default case
+        }
+
+      } else {
+        setError("User role not found.");
+        setIsLoading(false);
+      }
+    } 
+
+  },[])
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-
+    
     try {
-      const { error: supabaseError } = await supabase.auth.signInWithPassword({
+      const { data: sessionData, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (supabaseError) {
+      if (error) {
         if (supabaseError.message.includes("Email not confirmed")) {
           setError("Please confirm your email before logging in.");
         } else {
-          setError(supabaseError.message);
+          setError(error.message);
         }
         setIsLoading(false);
         return;
       }
 
       // Successful login, navigate to appropriate page
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { userData } } = await supabase.auth.getUser();
       // console.log("User object:", user); // Log the user object
-      const userData = user;
+      // const userData = user;
 
+      if (sessionData.session) {
+        const session = sessionData.session;
+        
+        
+        localStorage.setItem("supabaseSession", JSON.stringify(session));
+      }
+
+      const savedSession = localStorage.getItem("supabaseSession");
+  const session = savedSession ? JSON.parse(savedSession) : null;
+const user = session.user
       if (user && user.user_metadata && user.user_metadata.role) {
         const userRole = user.user_metadata.role;
 
+        // if (userRole === 'student') {
+        //   navigate(`/student/${user.id}`, {state : {user : userData}});
+        // } else if (userRole === 'teacher') {
+        //   navigate(`/teacher/${user.id}`, {state : {user : userData}});
+        // } else {
+        //   navigate('/'); // Default case
+        // }
+
         if (userRole === 'student') {
-          navigate(`/student/${user.id}`, {state : {user : userData}});
+          navigate(`/student`);
         } else if (userRole === 'teacher') {
-          navigate(`/teacher/${user.id}`, {state : {user : userData}});
+          navigate(`/teacher`);
         } else {
           navigate('/'); // Default case
         }
+
       } else {
         setError("User role not found.");
         setIsLoading(false);
