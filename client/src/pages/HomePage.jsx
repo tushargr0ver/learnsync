@@ -222,7 +222,9 @@ function HomePage() {
                     </a>
                   </button>
                   <button className="px-8 py-3 text-lg font-medium border-2 border-white bg-white text-blue-500 rounded-lg hover:bg-white/10 hover:text-white">
+                  <a href='/contact'>
                     Request Demo
+                    </a>
                   </button>
                 </div>
               </div>

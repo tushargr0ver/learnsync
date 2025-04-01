@@ -10,15 +10,18 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
     
 
 const StudentHomePage = () => {
+    const navigate = useNavigate()
 
 
     useEffect(()=>{
         const savedSession = localStorage.getItem("supabaseSession");
-        if(!savedSession) navigate('/');
+        if(!savedSession) navigate('/login');
+       
 const session = savedSession ? JSON.parse(savedSession) : null;
-
+if(session.user.user_metadata.role!='student') navigate('/')
 console.log(session);
-setName(session.user.user_metadata.full_name)
+if(session!=null) setName(session.user.user_metadata.full_name)
+
 
 
     },[])
@@ -33,7 +36,6 @@ setName(session.user.user_metadata.full_name)
 // console.log({id});
 
 
-const navigate = useNavigate()
 
 
     return (

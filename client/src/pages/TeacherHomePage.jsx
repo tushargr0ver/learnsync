@@ -6,10 +6,12 @@ const TeacherHomePage = () => {
 
     useEffect(()=>{
             const savedSession = localStorage.getItem("supabaseSession");
-            if(!savedSession) navigate('/');
+            if(!savedSession) navigate('/login');
+            
     const session = savedSession ? JSON.parse(savedSession) : null;
+    if(session.user.user_metadata.role!='teacher') navigate('/')
 console.log(session);
-setName(session.user.user_metadata.full_name)
+if(session!=null) setName(session.user.user_metadata.full_name)
 
     
         },[])
