@@ -1,31 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import notesOrange from "../assets/notes_orange.png";
 import notesGreen from "../assets/notes_green.png";
 import notesRed from "../assets/notes_red.png";
 import bell from "../assets/bell.png";
 import schedule from "../assets/schedule.png";
-import { useLocation, useParams } from "react-router-dom";
-
-    
+import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
+import axios from "axios";
 
 const StudentHomePage = () => {
+    const [quizdata, setQuizData] = useState([]);
+    const navigate = useNavigate(); // Create a navigate function
 
-    
-    
+    useEffect(() => {
+        const fetchQuizData = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/api/quizzes');
+                console.log("This is the response", response);
+                setQuizData(response.data);
+            } catch (error) {
+                console.error('Error fetching quiz data:', error);
+            }
+        };
 
-const location = useLocation()
-const name = location.state?.user.user_metadata.full_name
-
-const {id} = useParams();
-console.log({id});
-
-
-
+        fetchQuizData();
+    }, []);
 
     return (
         <>
-        
             <Navbar />
             <div className="container mx-auto p-4 bg-[#F8F9FA]">
                 <header className="bg-F8F9FA text-black/90 p-6 rounded bg-white border border-[#e2e2e2]">
@@ -100,6 +102,38 @@ console.log({id});
                         </div>
                     </div>
                 </section>
+
+                <section className="my-6">
+                    <h2 className="text-3xl px-3 py-6 text-black/90 font-semibold">Pending Quizzes</h2>
+                    <div className="bg-white border border-[#e2e2e2] py-8 px-8 rounded-lg">
+                        {quizdata.map((quiz) => (
+                            <div key={quiz.id} className="flex flex-col bg-white shadow-lg rounded-lg p-4 mb-6 transition-transform transform hover:scale-105">
+                                <div className="flex justify-between items-center mb-3">
+                                    <div>
+                                        <p className="text-xl font-semibold text-black">{quiz.quiz_name}</p>
+                                        <p className="text-sm text-gray-500">Created by: {quiz.created_by}</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between items-center mt-4">
+                                    <button
+                                        className="bg-blue-500 text-white text-lg px-6 py-2 rounded-full hover:bg-blue-600 transition-colors"
+                                        onClick={() => {
+                                            console.log(quiz.id);
+                                            navigate(`/student/quizzes/${quiz.id}`); // Use navigate instead of history.push
+                                        }}
+                                    >
+                                        Start Quiz
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+              
+
+
             </div>
         </>
     );

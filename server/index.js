@@ -3,7 +3,7 @@ const axios = require('axios');
 const cors = require('cors');
 require('dotenv').config();
 
-const {createClient} = require('@supabase/supabase-js'); //it is a supabase client that helps us to connect to the Supabase db
+const { createClient } = require('@supabase/supabase-js'); //it is a supabase client that helps us to connect to the Supabase db
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -11,7 +11,8 @@ const port = process.env.PORT || 5000;
 const JDoodle_CLIENT_ID = process.env.JDOODLE_ID;
 const JDoodle_CLIENT_SECRET = process.env.JDOODLE_SECRET;
 
-app.use(cors());
+app.use(cors({ origin: "http://localhost:5173" }));
+
 app.use(express.json());
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY); //connecting to Supabse db
@@ -21,10 +22,10 @@ console.log(process.env.SUPABASE_KEY)
 app.get('/messages/:group_id', async (req, res) => {
   const { group_id } = req.params;
   const { data, error } = await supabase
-      .from('messages')
-      .select('*')
-      .eq('group_id', group_id)
-      .order('created_at', { ascending: true });
+    .from('messages')
+    .select('*')
+    .eq('group_id', group_id)
+    .order('created_at', { ascending: true });
 
   if (error) return res.status(400).json({ error });
   res.json(data);
@@ -34,9 +35,9 @@ app.get('/messages/:group_id', async (req, res) => {
 app.post('/messages/', async (req, res) => {
   const { group_id, sender_id, content } = req.body;
   const { data, error } = await supabase
-      .from('messages')
-      .insert([{ group_id, sender_id, content }])
-      .select('*')
+    .from('messages')
+    .insert([{ group_id, sender_id, content }])
+    .select('*')
 
   if (error) return res.status(400).json({ error });
   res.json(data);
@@ -45,25 +46,25 @@ app.post('/messages/', async (req, res) => {
 
 app.post("/execute", async (req, res) => {
   try {
-      const { script, language, versionIndex } = req.body;
-      const response = await axios.post("https://api.jdoodle.com/v1/execute", {
-          clientId: JDoodle_CLIENT_ID,
-          clientSecret: JDoodle_CLIENT_SECRET,
-          script,
-          language,
-          versionIndex,
-      });
+    const { script, language, versionIndex } = req.body;
+    const response = await axios.post("https://api.jdoodle.com/v1/execute", {
+      clientId: JDoodle_CLIENT_ID,
+      clientSecret: JDoodle_CLIENT_SECRET,
+      script,
+      language,
+      versionIndex,
+    });
 
-      res.json(response.data);
+    res.json(response.data);
   } catch (error) {
-      res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
 app.post('/api/ask', async (req, res) => {
   const { question } = req.body;
   const apiKey = process.env.GEMINI_API_KEY;
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`; 
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
 
   if (!apiKey) {
     return res.status(500).json({ error: 'GEMINI_API_KEY not set.' });
@@ -81,16 +82,16 @@ app.post('/api/ask', async (req, res) => {
         }]
       }]
     },
-    {
+      {
         headers: {
-            'Content-Type': 'application/json',
-            'x-goog-api-key': apiKey, 
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey,
         }
-    });
+      });
 
     if (!response.data || !response.data.candidates || response.data.candidates.length === 0 || !response.data.candidates[0].content || !response.data.candidates[0].content.parts || response.data.candidates[0].content.parts.length === 0) {
-        console.error('Gemini API response malformed:', response.data);
-        return res.status(500).json({error: 'Gemini API response malformed'});
+      console.error('Gemini API response malformed:', response.data);
+      return res.status(500).json({ error: 'Gemini API response malformed' });
     }
 
     const answer = response.data.candidates[0].content.parts[0].text;
@@ -141,7 +142,7 @@ app.post("/generate-quiz", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": GEMINI_API_KEY, 
+          "x-goog-api-key": GEMINI_API_KEY,
         }
       }
     );
@@ -170,13 +171,133 @@ app.post("/generate-quiz", async (req, res) => {
   }
 });
 
-app.get("/", (req,res)=>{
-  res.send("Server is running")
+app.post("/api/quiz", async (req, res) => {
+  const { quiz_name, questions } = req.body;
+
+  if (!quiz_name || !questions || questions.length === 0) {
+    return res.status(400).json({ error: "Quiz name and questions are required." });
+  }
+
+  const { data: quizData, error: quizError } = await supabase
+    .from("quizzes")
+    .insert([{ quiz_name }])
+    .select("id") // Ensure we only retrieve the ID
+    .single();
+
+  if (quizError || !quizData) {
+    console.error("Quiz creation error:", quizError);
+    return res.status(500).json({ error: "Error creating quiz. Check server logs." });
+  }
+
+  console.log("Quiz created successfully:", quizData);
+
+  const questionsData = questions.map((question) => ({
+    quiz_id: quizData.id,
+    question_text: question.question_text,
+    question_type: question.question_type,
+    options: question.question_type === "mcq" ? question.options : null,
+    correct_answer: question.correct_answer,
+    created_by: "12345", //Temporary Placeholder
+  }));
+
+  const { error: questionError } = await supabase
+    .from("questions")
+    .insert(questionsData);
+
+  if (questionError) {
+    console.error("Error inserting questions:", questionError);
+    return res.status(500).json({ error: "Error saving questions." });
+  }
+
+  res.status(200).json({ message: "Quiz created successfully!" });
+});
+
+
+app.get("/api/quizzes", async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("quizzes")
+      .select("*")
+
+    if (error) {
+      return res.status(404).json({ error: 'Error fetching Quizzes' });
+    }
+    return res.status(200).json(data);
+  } catch (error) {
+    // Handle unexpected errors
+    console.error("Error fetching quiz:", error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
 })
 
-app.listen(port, () => {
-  if (!process.env.GEMINI_API_KEY){
-    console.error('GEMINI_API_KEY not set. Server will not function correctly');
+
+app.get("/api/quizzes/questions", async (req, res) => {
+  try {
+    const { quiz_id } = req.query; // Get quiz_id from query params
+
+    if (!quiz_id) {
+      return res.status(400).json({ error: "quiz_id is required" });
+    }
+
+    const { data, error } = await supabase
+      .from("questions")
+      .select("*")
+      .eq("quiz_id", quiz_id);
+
+    if (error) {
+      return res.status(500).json({ error: "Error fetching questions" });
+    }
+
+    if (!data.length) {
+      return res.status(404).json({ error: "No questions found for this quiz" });
+    }
+
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error("Error fetching questions:", err);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
-  console.log(`Server listening on port ${port}`);
+});
+
+
+
+
+app.post("/api/quiz/attempt", async (req, res) => {
+  try{
+  const { quiz_id, student_id, answers } = req.body; 
+
+        if (!quiz_id || !student_id || !answers || Object.keys(answers).length === 0) {
+            return res.status(400).json({ error: "Quiz ID, student ID, and answers are required" });
+        }
+
+        const responsesArray = Object.keys(answers).map((question_id) => ({
+            quiz_id: quiz_id,
+            student_id: student_id, // Include student ID
+            question_id: question_id,
+            response: answers[question_id], // Store selected answer
+        }));
+
+      const { data, error } = await supabase
+          .from("responses")
+          .insert(responsesArray);
+
+      if (error) {
+          console.error("Supabase Error:", error);
+          return res.status(500).json({ error: "Failed to save responses" });
+      }
+
+      res.status(201).json({ message: "Responses saved successfully", data });
+  } catch  (err) {
+      console.error("Server Error:", err);
+      res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+
+
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });

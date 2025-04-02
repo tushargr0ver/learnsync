@@ -1,12 +1,17 @@
 import { useState } from "react";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar.jsx";
 import { useLocation, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const TeacherHomePage = () => {
 
-    
-   const {id} = useParams();
-   console.log({id});
+    const [quizName, setQuizName] = useState("");
+
+    const navigate = useNavigate();
+
+
+    const { id } = useParams();
+    console.log({ id });
 
 
     const [isUploadOpen, setIsUploadOpen] = useState(false);
@@ -30,8 +35,10 @@ const TeacherHomePage = () => {
         }
     };
 
+   
+
     const location = useLocation()
-const name = location.state?.user.user_metadata.full_name
+    const name = location.state?.user.user_metadata.full_name
 
     return (
         <div>
@@ -157,9 +164,30 @@ const name = location.state?.user.user_metadata.full_name
                     </ul>
                 </section>
 
+                <section className="my-6">
+                    <h2 className="text-2xl font-semibold text-gray-900 mb-2">Create Quiz for Students</h2>
+                    <input
+                        type="text"
+                        placeholder="Enter Quiz Name"
+                        value={quizName}
+                        onChange={(event) => setQuizName(event.target.value)}
+                        className="border p-2 mb-2 w-96"
+                    />
+                    <button
+                        onClick={() => navigate(`/teacher/create/quiz/${quizName}`)}
+                        className="px-4 py-2 rounded-md bg-blue-500 text-white"
+                    >
+                        Create Quiz
+                    </button>
+
+
+                </section>
+
+
             </div>
         </div>
     );
 };
 
 export default TeacherHomePage;
+

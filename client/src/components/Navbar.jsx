@@ -4,9 +4,9 @@ const Navbar = () => {
   const location = useLocation();
 
   // Determine role from URL
-  const role = location.pathname.includes("teacher-login")
+  const role = location.pathname.includes("teacher")
     ? "teacher"
-    : location.pathname.includes("student-login")
+    : location.pathname.includes("student")
     ? "student"
     : null;
 
@@ -66,7 +66,7 @@ const Navbar = () => {
                   Home
                 </Link>
                 <Link
-                  to="/teacher-login/study-material"
+                  to="/teacher/study-material"
                   className="text-gray-600 hover:text-[#008CFF] font-semibold py-2 px-4 transition-all duration-200"
                 >
                   Study Material

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "../utils/supabaseClient.js";
+import { useParams } from "react-router-dom";
 
 const Chat = () => {
     const [groups, setGroups] = useState([]);
@@ -10,6 +11,7 @@ const Chat = () => {
     const [currentUserId, setCurrentUserId] = useState("fe1bd5e1-dc47-4241-961d-cd2a001438ba");
     const [message, setMessage] = useState("");
     const [authUser, setAuthUser] = useState("");
+    const { id } = useParams();
 
     const messagesEndRef = useRef(null);
 
@@ -105,7 +107,7 @@ const Chat = () => {
         const isGroupChat = groups.some(group => group.id === displayId);
 
         const newMessage = {
-            sender_id: currentUserId,
+            sender_id: id,
             content: message,
             created_at: new Date().toISOString(),
             ...(isGroupChat ? { group_id: displayId } : { receiver_id: displayId })
@@ -124,6 +126,7 @@ const Chat = () => {
     return (
         <div className="flex flex-row w-full gap-4 p-4">
             <div className="p-6 bg-white w-1/2 rounded-lg">
+            <h1 className="text-black">{id}</h1>
                 <ul className="space-y-4 mb-2">
                     {groups.length > 0 ? groups.map(group => (
                         <li key={group.id} className="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg shadow-md" onClick={() => handleGroupDisplay(group.name, group.id)}>
@@ -136,7 +139,7 @@ const Chat = () => {
                         <li key={user.id} className="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg shadow-md" onClick={() => handleChatDisplay(user.name, user.id)}>
                             <span className="text-lg font-medium text-black/80">{user.name}</span>
                         </li>
-                    )) : <p className="text-lg text-gray-500">No users found</p>}
+                    )) : <p className="text-lg text-gray-500">users found</p>}
                 </ul>
             </div>
 

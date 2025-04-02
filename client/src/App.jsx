@@ -18,6 +18,8 @@ import StudyMaterials from './pages/StudyMaterials.jsx';
 import LiveClasses from './pages/LiveClasses.jsx';
 import AIPoweredLearning from './pages/AiPoweredLearning.jsx';
 import Community from './pages/Community.jsx';
+import QuizByTeacher from './pages/QuizByTeacher.jsx';
+import AttemptQuiz from './pages/AttemptQuiz.jsx';
 
 
 function App() {
@@ -28,11 +30,11 @@ function App() {
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/login" element={<SignIn/>} />
         <Route path="/student/:id/community" element={<Community/>} />
-        <Route path="/student/:id" element={<StudentHomePage />} />
+        <Route path="/student" element={<StudentHomePage />} />
         <Route path="/student/:id/learn" element={<LearningPractice />} />
-        <Route path="/teacher/:id" element={<TeacherHomePage />} />
-        <Route path="/teacher/:id/assessments" element={<AssessmentsTeacher/>} />
-        <Route path="/teacher/:id/study-material" element={<StudyMaterialTeacher/>} />
+        <Route path="/teacher" element={<TeacherHomePage />} />
+        <Route path="/teacher/assessments" element={<AssessmentsTeacher/>} />
+        <Route path="/teacher/study-material" element={<StudyMaterialTeacher/>} />
         <Route path="/student/:id/chat-ai" element={<Chatbot/>} /> 
         {/* <Route path="/student-login/code-editor" element={<JsCodeEditor/>} /> */}
         <Route path="/quiz" element={<Quiz/>}/>
@@ -41,7 +43,8 @@ function App() {
         <Route path="/ai-powered-learning" element={<AIPoweredLearning/>} />
         <Route path="/study" element={<StudyMaterials/>} />
         <Route path="/live-classes" element={<LiveClasses/>} />
-
+        <Route path="teacher/create/quiz/:quiz_name" element={<QuizByTeacher />} />
+        <Route path="/student/quizzes/:quiz_id" element={<AttemptQuiz />} /> 
       </Routes>
       <Footer />
 

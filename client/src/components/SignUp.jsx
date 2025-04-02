@@ -88,6 +88,7 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
 
         if (error) {
           setErrors({ signup: error.message })
+          console.log("Error is occuring")
         } else {
           console.log("Signup successful:", data)
           if (role === 'student') {
