@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Navbar from "../components/navbar";
+import GeneralNavbar from "../components/GeneralNavbar";
 
 const ProfileSettings = () => {
   const [formData, setFormData] = useState({
@@ -27,7 +27,7 @@ const ProfileSettings = () => {
 
   return (
     <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg">
-      <Navbar/>
+      <GeneralNavbar/>
       <h2 className="text-2xl font-semibold text-black/90 mb-6">Profile Settings</h2>
 
       {/* Profile Picture Upload */}

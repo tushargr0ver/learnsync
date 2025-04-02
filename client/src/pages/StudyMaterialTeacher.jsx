@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
+import TeacherNavbar from '../components/TeacherNavbar';
 
 const StudyMaterialTeacher = () => {
   const [materials, setMaterials] = useState([
@@ -34,7 +34,7 @@ const StudyMaterialTeacher = () => {
 
   return (
     <div>
-      <Navbar />
+      <TeacherNavbar />
       <div className="flex flex-col items-center py-20 min-h-screen bg-gray-100 px-6">
         <h1 className="text-black text-3xl font-bold mb-4 text-center">Study Material</h1>
         <p className="text-gray-700 text-lg text-center mb-6 max-w-2xl">

@@ -1,11 +1,11 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
+import StudentNavbar from '../components/StudentNavbar';
 import CodeEditor from './Code-editor';
 
 const LearningPractice = () => {
   return (
     <div>
-      <Navbar />
+      <StudentNavbar />
       <div className="flex flex-col items-center py-16 min-h-screen bg-gray-100 px-6">
         {/* Header Section */}
         <div className="text-center max-w-lg mb-8">

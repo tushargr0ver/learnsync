@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
-import Navbar from "../components/Navbar";
+import StudentNavbar from "../components/StudentNavbar";
 
 function Chatbot() {
   const [question, setQuestion] = useState("");
@@ -55,7 +55,7 @@ function Chatbot() {
 
   return (
     <>
-          <Navbar />
+          <StudentNavbar />
 
     <div className="flex flex-col min-h-96 my-24 min-w-56 ">
       <div className="flex flex-col flex-grow justify-center w-2/4 mx-auto gap-6 bg-white shadow-lg rounded-lg p-6 mt-4">

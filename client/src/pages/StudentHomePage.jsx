@@ -6,6 +6,7 @@ import notesRed from "../assets/notes_red.png";
 import bell from "../assets/bell.png";
 import schedule from "../assets/schedule.png";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import StudentNavbar from '../components/StudentNavbar';
 
     
 
@@ -41,7 +42,7 @@ if(session!=null) setName(session.user.user_metadata.full_name)
     return (
         <>
         
-            <Navbar />
+            <StudentNavbar />
             <div className="container mx-auto p-4 bg-[#F8F9FA]">
                 <header className="bg-F8F9FA text-black/90 p-6 rounded bg-white border border-[#e2e2e2]">
                     <h1 className="text-3xl text-black/90 font-bold mb-2">Welcome,{name} </h1>

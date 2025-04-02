@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import TeacherNavbar from "../components/TeacherNavbar";
 
 const TeacherHomePage = () => {
 
@@ -52,7 +53,7 @@ if(session!=null) setName(session.user.user_metadata.full_name)
 
     return (
         <div>
-            <Navbar />
+            <TeacherNavbar />
             <div className="container mx-auto px-6 py-8 bg-[#F8F9FA]">
 
                 {/* Header */}

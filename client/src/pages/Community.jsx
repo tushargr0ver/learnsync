@@ -1,12 +1,12 @@
 
 import React from 'react'
-import Navbar from '../components/Navbar.jsx'
+import StudentNavbar from '../components/StudentNavbar.jsx'
 import Chat from '../components/Chat.jsx'
 
 const Community = () => {
   return (
   <>
-  <Navbar/>
+  <StudentNavbar/>
     <div>
       <Chat/>
     </div>

@@ -1,10 +1,10 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
+import StudentNavbar from '../components/StudentNavbar';
 
 const AIAssistance = () => {
   return (
     <div>
-      <Navbar />
+      <StudentNavbar />
       <div className="flex flex-col items-center py-20 min-h-screen bg-gray-100 px-6">
         <h1 className="text-black text-3xl font-bold mb-4 text-center">AI Assistance</h1>
         <p className="text-gray-700 text-lg text-center mb-6 max-w-2xl">
