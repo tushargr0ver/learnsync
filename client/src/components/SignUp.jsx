@@ -1,6 +1,5 @@
-"use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { supabase } from '../utils/supabaseClient';
 import { Eye, EyeOff, Mail, Lock, User, ChevronLeft } from "react-feather"
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
@@ -17,8 +16,32 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [errors, setErrors] = useState({})
+  const [errors, setError] = useState({})
   const navigate = useNavigate(); // Initialize navigate
+
+  useEffect(()=>{
+      const savedSession = localStorage.getItem("supabaseSession");
+      if(savedSession){
+        const session = savedSession ? JSON.parse(savedSession) : null;
+  const user = session.user
+        if (user && user.user_metadata && user.user_metadata.role) {
+          const userRole = user.user_metadata.role;
+  
+          if (userRole === 'student') {
+            navigate(`/student`);
+          } else if (userRole === 'teacher') {
+            navigate(`/teacher`);
+          } else {
+            navigate('/'); // Default case
+          }
+  
+        } else {
+          setError("User role not found.");
+          setIsLoading(false);
+        }
+      } 
+  
+    },[])
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -29,7 +52,7 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
     });
 
     if (errors[name]) {
-      setErrors({
+      setError({
         ...errors,
         [name]: null,
       });
@@ -63,7 +86,7 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
       newErrors.agreeToTerms = "You must agree to the terms and conditions"
     }
 
-    setErrors(newErrors)
+    setError(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
@@ -87,7 +110,7 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
 
 
         if (error) {
-          setErrors({ signup: error.message })
+          setError({ signup: error.message })
         } else {
           console.log("Signup successful:", data)
           if (role === 'student') {
@@ -99,7 +122,7 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
           }
         }
       } catch (err) {
-        setErrors({ signup: "An unexpected error occurred." })
+        setError({ signup: "An unexpected error occurred." })
         console.error("Signup error:", err)
       } finally {
         setIsLoading(false)

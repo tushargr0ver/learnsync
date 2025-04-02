@@ -8,6 +8,9 @@ import editor from "../assets/editor.png"
 import ai from "../assets/ai.png"
 
 function HomePage() {
+
+ 
+
   return (
     <>
       <GeneralNavBar />

@@ -27,7 +27,7 @@ const user = session.user
             {role === "student" ? (
               <>
                 <Link
-                  to="/student-login"
+                  to="/student"
                   className="text-gray-600 hover:text-[#008CFF] font-semibold py-2 px-4 transition-all duration-200"
                 >
                   Home
