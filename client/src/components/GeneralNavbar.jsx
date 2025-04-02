@@ -1,6 +1,18 @@
 import { Link } from 'react-router-dom';
+import SignOut from './SignOut';
+import { useState, useEffect } from 'react';
+
+
+
+
 
 function GeneralNavBar() {
+
+    const [userHasAccount,setUserHasAccount] = useState(false)
+
+useEffect(()=>{
+  if(localStorage.getItem("supabaseSession")) setUserHasAccount(true)
+})
     return (
         <nav className="bg-[#F8F9FA] shadow-md py-4 w-full">
             <div className="max-w-full mx-auto px-6 flex justify-between items-center">
@@ -32,19 +44,28 @@ function GeneralNavBar() {
 
                 {/* Right Section - Signin Links */}
                 <div className="space-x-4">
-                    <Link to="/signup">
-                        <button className="border text-black/90 border-[#e2e2e2] font-medium py-2 px-8 rounded-lg transition-all duration-200">
-                            Signup
-                        </button>
-                    </Link>
-                    <Link to="/login">
-                        <button className="bg-[#008CFF] text-white py-2 px-8 font-medium rounded-lg transition-all duration-200 hover:bg-[#0066CC]">
-                            Login
-                        </button>
-                    </Link>
+  {!userHasAccount ? (
+    <>
+      <Link to="/signup">
+        <button className="border text-black/90 border-[#e2e2e2] font-medium py-2 px-8 rounded-lg transition-all duration-200">
+          Signup
+        </button>
+      </Link>
+      <Link to="/login">
+        <button className="bg-[#008CFF] text-white py-2 px-8 font-medium rounded-lg transition-all duration-200 hover:bg-[#0066CC]">
+          Login
+        </button>
+      </Link>
+    </>
+  ) : (
+    <SignOut />
+  )}
+</div>
+                    
+                    
 
 
-                </div>
+                
             </div>
         </nav>
     );
