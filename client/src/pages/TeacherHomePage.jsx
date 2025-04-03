@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar.jsx";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, Link} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const TeacherHomePage = () => {
@@ -9,9 +9,7 @@ const TeacherHomePage = () => {
 
     const navigate = useNavigate();
 
-
-    const { id } = useParams();
-    console.log({ id });
+    //const { userId } = useParams();
 
 
     const [isUploadOpen, setIsUploadOpen] = useState(false);
@@ -44,6 +42,7 @@ const TeacherHomePage = () => {
         <div>
             <Navbar />
             <div className="container mx-auto px-6 py-8 bg-[#F8F9FA]">
+            {/* <h1>Welcome, Teacher {userId}</h1>  */}
 
                 {/* Header */}
                 <h1 className="text-3xl font-semibold text-gray-900">Welcome, Professor {name}!</h1>
@@ -179,6 +178,8 @@ const TeacherHomePage = () => {
                     >
                         Create Quiz
                     </button>
+
+                    <Link className="text-black ml-3" to="/student/responses">Check Responses</Link>
 
 
                 </section>

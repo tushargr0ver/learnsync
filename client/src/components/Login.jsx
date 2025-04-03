@@ -32,24 +32,48 @@ const Login = ({ onNavigateToSignup, onNavigateToHome }) => {
         return;
       }
 
-      // Successful login, navigate to appropriate page
-      const { data: { user } } = await supabase.auth.getUser();
-      // console.log("User object:", user); // Log the user object
-      const userData = user;
-
-      if (user && user.user_metadata && user.user_metadata.role) {
-        const userRole = user.user_metadata.role;
-
-        if (userRole === 'student') {
-          navigate(`/student/${user.id}`, {state : {user : userData}});
-        } else if (userRole === 'teacher') {
-          navigate(`/teacher/${user.id}`, {state : {user : userData}});
-        } else {
-          navigate('/'); // Default case
-        }
-      } else {
-        setError("User role not found.");
+      // Successful login, fetch user details
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        setError("Failed to get user data.");
         setIsLoading(false);
+        return;
+      }
+
+      const user = data.user;
+      if (!user) {
+        setError("User data not found.");
+        setIsLoading(false);
+        return;
+      }
+
+      console.log("User data:", user);
+
+      // Inserting data into the "users" table <! comment this out later when signup is implemented !>
+      await supabase.from("users").insert([
+        {
+          auth_id: user.id,
+          email: user.email,
+          name: user.user_metadata?.full_name || "",
+          role: user.user_metadata?.role || "student", // Default role if missing
+          created_at: new Date().toISOString(),
+        },
+      ]);
+
+      // Redirect based on role
+      const userRole = user.user_metadata?.role || "student";
+
+      if (userRole === "student") {
+        navigate(`/student`, { state: { user } });
+       // navigate(`/student/${user.id}`, { state: { user } });
+
+
+      } else if (userRole === "teacher") {
+        navigate(`/teacher/`, { state: { user } });
+       // navigate(`/teacher/${user.id}`, { state: { user } });
+
+      } else {
+        navigate("/");
       }
     } catch (err) {
       setError("An unexpected error occurred.");

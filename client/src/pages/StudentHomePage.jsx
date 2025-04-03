@@ -6,25 +6,27 @@ import notesRed from "../assets/notes_red.png";
 import bell from "../assets/bell.png";
 import schedule from "../assets/schedule.png";
 import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
-import axios from "axios";
+import { supabase } from '../utils/supabaseClient';
 
 const StudentHomePage = () => {
     const [quizdata, setQuizData] = useState([]);
     const navigate = useNavigate(); // Create a navigate function
 
-    useEffect(() => {
-        const fetchQuizData = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/api/quizzes');
-                console.log("This is the response", response);
-                setQuizData(response.data);
-            } catch (error) {
-                console.error('Error fetching quiz data:', error);
-            }
-        };
+   useEffect(()=>{
 
-        fetchQuizData();
-    }, []);
+    const fetchQuizData = async ()=>{
+        const {data, error} = await supabase.from("quizzes").select("*");
+
+        if(error){
+            console.log("Erroe fetching quizzes form the table")
+        } else {
+            setQuizData(data)
+            console.log(data);
+        }
+        
+    }
+    fetchQuizData();
+   }, [])
 
     return (
         <>
@@ -112,6 +114,8 @@ const StudentHomePage = () => {
                                     <div>
                                         <p className="text-xl font-semibold text-black">{quiz.quiz_name}</p>
                                         <p className="text-sm text-gray-500">Created by: {quiz.created_by}</p>
+                                        <p className="text-sm text-gray-500">Deadline - : {quiz.submission_date}</p>
+
                                     </div>
                                 </div>
 

@@ -21,7 +21,6 @@ import Community from './pages/Community.jsx';
 import QuizByTeacher from './pages/QuizByTeacher.jsx';
 import AttemptQuiz from './pages/AttemptQuiz.jsx';
 
-
 function App() {
   return (
     <Router>
@@ -29,9 +28,10 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/login" element={<SignIn/>} />
-        <Route path="/student/:id/community" element={<Community/>} />
+
+        <Route path="/student/community" element={<Community/>} />
         <Route path="/student" element={<StudentHomePage />} />
-        <Route path="/student/:id/learn" element={<LearningPractice />} />
+        <Route path="/student/learn" element={<LearningPractice />} />
         <Route path="/teacher" element={<TeacherHomePage />} />
         <Route path="/teacher/assessments" element={<AssessmentsTeacher/>} />
         <Route path="/teacher/study-material" element={<StudyMaterialTeacher/>} />
@@ -44,7 +44,7 @@ function App() {
         <Route path="/study" element={<StudyMaterials/>} />
         <Route path="/live-classes" element={<LiveClasses/>} />
         <Route path="teacher/create/quiz/:quiz_name" element={<QuizByTeacher />} />
-        <Route path="/student/quizzes/:quiz_id" element={<AttemptQuiz />} /> 
+        <Route path="/student/quizzes/:quiz_id" element={<AttemptQuiz />} />
       </Routes>
       <Footer />
 

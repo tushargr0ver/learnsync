@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { supabase } from '../utils/supabaseClient';
 import { Eye, EyeOff, Mail, Lock, User, ChevronLeft } from "react-feather"
@@ -68,46 +66,57 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    if (validateForm()) {
-      setIsLoading(true)
-
-      try {
-        const { data, error } = await supabase.auth.signUp({
-          email: formData.email,
-          password: formData.password,
-          options: {
-            data: {
-              full_name: formData.name,
-              role: role,
-            },
+    e.preventDefault();
+  
+    if (!validateForm()) return; 
+  
+    setIsLoading(true);
+  
+    try {
+      // Sign up user
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            full_name: formData.name,
+            role: role,
           },
-        })
-
-
-        if (error) {
-          setErrors({ signup: error.message })
-          console.log("Error is occuring")
-        } else {
-          console.log("Signup successful:", data)
-          if (role === 'student') {
-            navigate('/login' ); // Navigate using navigate
-          } else if (role === 'teacher') {
-            navigate('/login'); // Navigate using navigate
-          } else {
-            navigate('/'); // Default case
-          }
-        }
-      } catch (err) {
-        setErrors({ signup: "An unexpected error occurred." })
-        console.error("Signup error:", err)
-      } finally {
-        setIsLoading(false)
+        },
+      });
+  
+      if (error) {
+        setErrors({ signup: error.message });
+        console.log("Error occurred:", error.message);
+        return; // Stop execution if signup fails
       }
-    }
-  }
+  
+      // Ensure the user object exists before inserting into DB
+      if (data?.user) {
+        await supabase.from("users").insert([
+          {
+            auth_id: data.user.id,
+            email: data.user.email,
+            name: data.user.user_metadata?.full_name || "",
+            role: data.user.user_metadata?.role || "student", // Default role
+            created_at: new Date().toISOString(),
+          },
+        ]);
+  
+        console.log("Signup successful: DATA HAS BEEN INSERTED INTO Users table in Database", data);
+  
+        navigate("/login"); // Always redirect to login after signup
 
+      }
+
+    } catch (err) {
+      setErrors({ signup: err.message || "An unexpected error occurred." });
+      console.error("Signup error:", err);
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
+  };
+  
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -117,7 +126,7 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
         >
           <ChevronLeft size={16} className="mr-1" />
           <a href="/">Back to Home</a>
-          
+
         </button>
         <div className="flex items-center justify-center">
           <span className="text-blue-600 text-3xl font-bold">Learn</span>
@@ -126,11 +135,11 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create your account</h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           <a href="/login">
-          Already have an account?{" "}
-          
-          <button onClick={onNavigateToLogin} className="font-medium text-blue-600 hover:text-blue-500">
-            Sign in
-          </button>
+            Already have an account?{" "}
+
+            <button onClick={onNavigateToLogin} className="font-medium text-blue-600 hover:text-blue-500">
+              Sign in
+            </button>
           </a>
         </p>
       </div>
@@ -153,9 +162,8 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
                   autoComplete="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`block w-full pl-10 pr-3 py-2 border ${
-                    errors.name ? "border-red-300" : "border-gray-300"
-                  } rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
+                  className={`block w-full pl-10 pr-3 py-2 border ${errors.name ? "border-red-300" : "border-gray-300"
+                    } rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
                   placeholder="John Doe"
                 />
               </div>
@@ -177,9 +185,8 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
                   autoComplete="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`block w-full pl-10 pr-3 py-2 border ${
-                    errors.email ? "border-red-300" : "border-gray-300"
-                  } rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
+                  className={`block w-full pl-10 pr-3 py-2 border ${errors.email ? "border-red-300" : "border-gray-300"
+                    } rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
                   placeholder="you@example.com"
                 />
               </div>
@@ -201,9 +208,8 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
                   autoComplete="new-password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`block w-full pl-10 pr-10 py-2 border ${
-                    errors.password ? "border-red-300" : "border-gray-300"
-                  } rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
+                  className={`block w-full pl-10 pr-10 py-2 border ${errors.password ? "border-red-300" : "border-gray-300"
+                    } rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
                   placeholder="••••••••"
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -235,9 +241,8 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
                   autoComplete="new-password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`block w-full pl-10 pr-10 py-2 border ${
-                    errors.confirmPassword ? "border-red-300" : "border-gray-300"
-                  } rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
+                  className={`block w-full pl-10 pr-10 py-2 border ${errors.confirmPassword ? "border-red-300" : "border-gray-300"
+                    } rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
                   placeholder="••••••••"
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -265,9 +270,8 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
                   type="checkbox"
                   checked={formData.agreeToTerms}
                   onChange={handleChange}
-                  className={`h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded ${
-                    errors.agreeToTerms ? "border-red-300" : ""
-                  }`}
+                  className={`h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded ${errors.agreeToTerms ? "border-red-300" : ""
+                    }`}
                 />
               </div>
               <div className="ml-3 text-sm">
@@ -299,9 +303,8 @@ const SignUp = ({ onNavigateToLogin, onNavigateToHome }) => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-                  isLoading ? "opacity-70 cursor-not-allowed" : ""
-                }`}
+                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isLoading ? "opacity-70 cursor-not-allowed" : ""
+                  }`}
               >
                 {isLoading ? (
                   <>

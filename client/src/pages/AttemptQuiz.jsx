@@ -1,52 +1,97 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
+import {supabase} from "../utils/supabaseClient"
 
 const AttemptQuiz = () => {
     const { quiz_id } = useParams();
+    const[user, setUser] = useState("");
+    const [questions, setQuestions] = useState([]);
+    const [responses, setResponses] = useState({});
 
     const navigate = useNavigate();
 
     if (!quiz_id) return <p className="text-red-500">Invalid quiz ID</p>;
 
-    const [questions, setQuestions] = useState([]);
-    const [responses, setResponses] = useState({});
+   
+
+    useEffect(() => {
+        const fetchUser = async () => {
+          const { data, error } = await supabase.auth.getUser();
+          if (error) {
+            console.error("Error fetching user:", error.message);
+          } else {
+            setUser(data?.user);
+          }
+        };
+        fetchUser();
+      }, []);
 
     useEffect(() => {
         if (!quiz_id) return;
 
-        const fetchQuestions = async () => {
+        const fetchQuestions = async () => { 
             try {
-                const response = await axios.get(
-                    `http://localhost:5000/api/quizzes/questions?quiz_id=${quiz_id}`
-                );
-                setQuestions(response.data);
-                console.log(response.data);
+                const { data, error } = await supabase
+                    .from("questions")  // Table name
+                    .select("*")        // Select all columns (or specify needed ones)
+                    .eq("quiz_id", quiz_id); // Filter by quiz_id
+                
+                if (error) {
+                    throw error;
+                }
+        
+                setQuestions(data);  // Store fetched questions in state
+                console.log(data);   // Log to verify response
             } catch (error) {
-                console.error("Error fetching questions:", error);
+                console.error("Error fetching questions:", error.message);
             }
         };
+        
 
         fetchQuestions();
     }, [quiz_id]);
 
     const handleAnswerChange = (questionId, selectedAnswer) => {
-        setResponses({
-            ...responses,
+        setResponses((prev) => ({
+            ...prev,
             [questionId]: selectedAnswer,
-        });
+        }));
     };
 
-    const handleQuizSubmission = async ()=>{
-      const response = await axios.post("http://localhost:5000/api/quiz/attempt", {
-        quiz_id: quiz_id,
-        student_id: "fe1bd5e1-dc47-4241-961d-cd2a001438ba", 
-        answers: responses
-      })
-
-      console.log("Quiz submitted successfully:", response.data);
-      navigate("/student"); 
-    }
+    const handleQuizSubmission = async () => {
+        if (!user) {
+            console.error("Student ID is missing.");
+            return;
+        }
+    
+        const responseEntries = Object.entries(responses).map(([questionId, selectedOption]) => {
+            // Find the corresponding question
+            const question = questions.find(q => String(q.id) === String(questionId)); // Ensure both are strings for comparison
+    
+            return {
+                quiz_id,
+                student_id: user.id,
+                question_id: questionId,
+                selected_option: selectedOption,
+                is_correct: question?.correct_answer === selectedOption, // Ensure correct comparison
+            };
+        });
+    
+        try {
+            const { data, error } = await supabase.from("responses").insert(responseEntries);
+    
+            if (error) {
+                throw error;
+            }
+    
+            console.log("Quiz submitted successfully:", data);
+            navigate("/student");
+        } catch (error) {
+            console.error("Error submitting quiz:", error.message);
+        }
+    };
+    
 
     return (
         <div className="p-6 max-w-3xl mx-auto text-black">
@@ -58,7 +103,6 @@ const AttemptQuiz = () => {
                         <div key={question.id} className="mb-6 p-4 border rounded-lg shadow">
                             <h3 className="text-lg font-semibold">{question.question_text}</h3>
 
-                            {/* General Question Type (Textarea for open-ended answers) */}
                             {question.question_type === "general" ? (
                                 <textarea
                                     className="w-full p-2 mt-2 border rounded"
