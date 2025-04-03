@@ -6,6 +6,7 @@ import notesRed from "../assets/notes_red.png";
 import bell from "../assets/bell.png";
 import schedule from "../assets/schedule.png";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import  VideoList from "../components/VideoList"
 
     
 
@@ -101,6 +102,9 @@ if(session!=null) setName(session.user.user_metadata.full_name)
                             <button className="mt-2 px-8 py-2 bg-blue-500 text-white rounded">Open</button>
                         </div>
                     </div>
+
+                    <VideoList />
+
                 </section>
 
                 <section className="my-6">
