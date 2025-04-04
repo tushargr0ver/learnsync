@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
 import TeacherNavbar from "../components/TeacherNavbar";
 
 const TeacherHomePage = () => {
+    const [isVideoUploadOpen, setIsVideoUploadOpen] = useState(false);
 
     const [quizName, setQuizName] = useState("");
     useEffect(()=>{
@@ -25,12 +26,14 @@ if(session!=null) setName(session.user.user_metadata.full_name)
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
 
-    const handleFileChange = (event) => {
+    const handleVideoFileChange = (event) => {
         const file = event.target.files[0];
-        if (file && file.type === "application/pdf") {
+        const validVideoTypes = ["video/mp4", "video/avi", "video/mkv", "video/mov", "video/webm"];
+
+        if (file && validVideoTypes.includes(file.type)) {
             setSelectedFile(file);
         } else {
-            alert("Please upload a valid PDF file.");
+            alert("Please upload a valid video file (MP4, AVI, MKV, MOV, or WEBM).");
             setSelectedFile(null);
         }
     };
@@ -40,6 +43,35 @@ if(session!=null) setName(session.user.user_metadata.full_name)
             alert(`"${selectedFile.name}" uploaded successfully!`);
             setSelectedFile(null);
             setIsUploadOpen(false);
+        }
+    };
+    const handleVideoUpload = async () => {
+        if (!selectedFile) {
+            alert("No file selected!");
+            return;
+        }
+    
+        const formData = new FormData();
+        formData.append("videofile", selectedFile);
+    
+        try {
+            const response = await fetch("http://localhost:5000/uploadVideo", {
+                method: "POST",
+                body: formData
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+                alert(`Video uploaded successfully! URL: ${data.videoUrl}`);
+                setSelectedFile(null);
+                setIsVideoUploadOpen(false);
+            } else {
+                alert(`Upload failed: ${data.error}`);
+            }
+        } catch (error) {
+            console.error("Error uploading video:", error);
+            alert("An error occurred while uploading the video.");
         }
     };
 
@@ -129,6 +161,13 @@ return (
                     <button className="bg-blue-500 w-full text-white px-4 py-3 rounded-md flex-1 hover:bg-blue-600">
                         Schedule Live Session
                     </button>
+                    <button 
+                        className="bg-blue-500 w-full text-white px-4 py-3 rounded-md flex-1 hover:bg-blue-600 "
+                        onClick={() => setIsVideoUploadOpen(true)}
+                        >
+                            Upload Video Resources
+
+                        </button>
                 </div>
             </section>
 
@@ -164,6 +203,39 @@ return (
                     </div>
                 </div>
             )}
+
+{isVideoUploadOpen && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                            <h2 className="text-xl font-semibold text-gray-900">Upload video resources</h2>
+                            <input
+                                type="file"
+                                accept="video/mp4,video/avi,video/mkv,video/mov,video/webm"
+                                onChange={handleVideoFileChange}
+                                className="w-full mt-3 p-2 border rounded-md"
+                                name="videofile"
+                            />
+                            {selectedFile && (
+                                <p className="text-gray-600 mt-2">Selected: {selectedFile.name}</p>
+                            )}
+                            <div className="flex justify-end gap-2 mt-4">
+                                <button
+                                    className="bg-gray-300 px-4 py-2 rounded-md"
+                                    onClick={() => setIsVideoUploadOpen(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    className={`px-4 py-2 rounded-md ${selectedFile ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-gray-400 text-gray-200 cursor-not-allowed"}`}
+                                    disabled={!selectedFile}
+                                    onClick={handleVideoUpload}
+                                >
+                                    Upload
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
             {/* Recent Activity */}
             <section className="my-6">

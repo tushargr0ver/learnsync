@@ -8,6 +8,7 @@ import schedule from "../assets/schedule.png";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import StudentNavbar from '../components/StudentNavbar';
 import { supabase } from '../utils/supabaseClient';
+import VideoList from "../components/VideoList"
 
     
 
@@ -100,6 +101,7 @@ return (
                         <button className="mt-2 text-blue-500 w-full bg-gray-100 px-4 py-3 rounded">Set Reminder</button>
                     </div>
                 </div>
+                <VideoList />
             </section>
 
             <section>
