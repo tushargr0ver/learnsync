@@ -19,11 +19,17 @@ import AIPoweredLearning from './pages/AiPoweredLearning.jsx';
 import Community from './pages/Community.jsx';
 import Quiz from './pages/Quiz.jsx';
 
+import QuizByTeacher from './pages/QuizByTeacher.jsx';
+import AttemptQuiz from './pages/AttemptQuiz.jsx';
+
 
 function App() {
   return (
     <Router>
       <Routes>
+
+      <Route path="teacher/create/quiz/:quiz_name" element={<QuizByTeacher />} />
+      <Route path="/student/quizzes/:quiz_id" element={<AttemptQuiz />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/login" element={<SignIn/>} />
@@ -51,7 +57,6 @@ function App() {
         <Route path="/ai-powered-learning" element={<AIPoweredLearning/>} />
         <Route path="/study" element={<StudyMaterials/>} />
         <Route path="/live-classes" element={<LiveClasses/>} />
-        <Route path='/quiz' element={<Quiz/>} />
 
       </Routes>
       <Footer />

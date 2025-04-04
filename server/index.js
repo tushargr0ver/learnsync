@@ -176,9 +176,74 @@ app.get("/", (req,res)=>{
   res.send("Server is running")
 })
 
-app.listen(port, () => {
-  if (!process.env.GEMINI_API_KEY){
-    console.error('GEMINI_API_KEY not set. Server will not function correctly');
+
+app.get("/api/quizzes/questions", async (req, res) => {
+  try {
+    const { quiz_id } = req.query; // Get quiz_id from query params
+
+    if (!quiz_id) {
+      return res.status(400).json({ error: "quiz_id is required" });
+    }
+
+    const { data, error } = await supabase
+      .from("questions")
+      .select("*")
+      .eq("quiz_id", quiz_id);
+
+    if (error) {
+      return res.status(500).json({ error: "Error fetching questions" });
+    }
+
+    if (!data.length) {
+      return res.status(404).json({ error: "No questions found for this quiz" });
+    }
+
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error("Error fetching questions:", err);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
-  console.log(`Server listening on port ${port}`);
+});
+
+
+
+
+app.post("/api/quiz/attempt", async (req, res) => {
+  try{
+  const { quiz_id, student_id, answers } = req.body; 
+
+        if (!quiz_id || !student_id || !answers || Object.keys(answers).length === 0) {
+            return res.status(400).json({ error: "Quiz ID, student ID, and answers are required" });
+        }
+
+        const responsesArray = Object.keys(answers).map((question_id) => ({
+            quiz_id: quiz_id,
+            student_id: student_id, // Include student ID
+            question_id: question_id,
+            response: answers[question_id], // Store selected answer
+        }));
+
+      const { data, error } = await supabase
+          .from("responses")
+          .insert(responsesArray);
+
+      if (error) {
+          console.error("Supabase Error:", error);
+          return res.status(500).json({ error: "Failed to save responses" });
+      }
+
+      res.status(201).json({ message: "Responses saved successfully", data });
+  } catch  (err) {
+      console.error("Server Error:", err);
+      res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+
+
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });

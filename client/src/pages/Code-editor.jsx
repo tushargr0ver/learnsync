@@ -2,8 +2,8 @@ import React, { useState, useRef } from "react";
 import MonacoEditor from "@monaco-editor/react";
 import axios from "axios";
 
-const JDoodle_CLIENT_ID = import.meta.env.VITE_JDOODLE_ID;
-const JDoodle_CLIENT_SECRET = import.meta.env.VITE_JDOODLE_SECRET;
+// const JDoodle_CLIENT_ID = import.meta.env.VITE_JDOODLE_ID;
+// const JDoodle_CLIENT_SECRET = import.meta.env.VITE_JDOODLE_SECRET;
 
 const languageMap = {
   javascript: { jdoodle: "nodejs", version: "1" },
@@ -35,8 +35,8 @@ const CodeEditor = () => {
 
     try {
       const response = await axios.post("http://localhost:5000/execute", {
-        clientId: JDoodle_CLIENT_ID,
-        clientSecret: JDoodle_CLIENT_SECRET,
+        // clientId: JDoodle_CLIENT_ID,
+        // clientSecret: JDoodle_CLIENT_SECRET,
         script: code,
         language: langConfig.jdoodle,
         versionIndex: langConfig.version,

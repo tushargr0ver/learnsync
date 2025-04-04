@@ -77,6 +77,19 @@ const user = session.user
       if (user && user.user_metadata && user.user_metadata.role) {
         const userRole = user.user_metadata.role;
 
+
+
+        // Inserting data into the "users" table <! comment this out later when signup is implemented !>
+      await supabase.from("users").insert([
+        {
+          auth_id: user.id,
+          email: user.email,
+          name: user.user_metadata?.full_name || "",
+          role: user.user_metadata?.role || "student", // Default role if missing
+          created_at: new Date().toISOString(),
+        },
+      ]);
+
         // if (userRole === 'student') {
         //   navigate(`/student/${user.id}`, {state : {user : userData}});
         // } else if (userRole === 'teacher') {
