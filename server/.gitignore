@@ -23,3 +23,5 @@ Thumbs.db
 dist/
 out/
 coverage/
+
+uploads

@@ -26,6 +26,16 @@ if(session!=null) setName(session.user.user_metadata.full_name)
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
 
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file && file.type === "application/pdf") {
+            setSelectedFile(file);
+        } else {
+            alert("Please upload a valid PDF file.");
+            setSelectedFile(null);
+        }
+    };
+
     const handleVideoFileChange = (event) => {
         const file = event.target.files[0];
         const validVideoTypes = ["video/mp4", "video/avi", "video/mkv", "video/mov", "video/webm"];
