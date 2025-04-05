@@ -3,6 +3,8 @@ const axios = require('axios');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const  supabase = require('./config/supabase.js')
+const http = require("http");
+const { initSocket } = require("./config/socket");
 
 dotenv.config();
 
@@ -13,6 +15,10 @@ console.log(process.env.SUPABASE_KEY)
 
 app.use(cors());
 app.use(express.json());
+
+const server = http.createServer(app);
+
+initSocket(server);
 
 // Get all messages (fetching the messages based of group_id)
 app.get('/messages/:group_id', async (req, res) => {
@@ -170,7 +176,7 @@ app.get("/", (req,res)=>{
   res.send("Server is running")
 })
 
-app.listen(port, () => {
+server.listen(port, () => {
   if (!process.env.GEMINI_API_KEY){
     console.error('GEMINI_API_KEY not set. Server will not function correctly');
   }

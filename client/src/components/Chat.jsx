@@ -7,8 +7,24 @@ const Chat = () => {
     const [chats, setChats] = useState([]);
     const [display, setDisplay] = useState("");
     const [displayId, setDisplayId] = useState("");
-    const [currentUserId] = useState("fe1bd5e1-dc47-4241-961d-cd2a001438ba");  // Hardcoded sender ID
     const [message, setMessage] = useState("");
+
+    const [currentUserId, setCurrentUserId] = useState(null);
+
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user }, error } = await supabase.auth.getUser();
+            console.log(user.id)
+
+            if (user) {
+                setCurrentUserId(user.id);  // or user?.id if you prefer optional chaining
+            } else {
+                console.error("Error fetching user:", error);
+            }
+        };
+
+        getUser();
+    }, []);
 
     const messagesEndRef = useRef(null);
 
@@ -27,13 +43,24 @@ const Chat = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const { data, error } = await supabase.from("users").select("*");
-            if (error) console.error("Error fetching users:", error.message);
-            else setUsers(data);
+            if (!currentUserId) return;
+    
+            const { data, error } = await supabase
+                .from("users")
+                .select("*")
+                .neq("auth_id", currentUserId);  // Filter out logged-in user
+    
+            if (error) {
+                console.error("Error fetching users:", error.message);
+            } else {
+                setUsers(data);
+                console.log("Other users:", data);
+            }
         };
+    
         fetchUsers();
-    }, []);
-
+    }, [currentUserId]);
+    
     const handleGroupDisplay = async (groupName, groupId) => {
         setDisplay(groupName);
         setDisplayId(groupId);
