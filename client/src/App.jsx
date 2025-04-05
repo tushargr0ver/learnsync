@@ -21,6 +21,7 @@ import Quiz from './pages/Quiz.jsx';
 
 import QuizByTeacher from './pages/QuizByTeacher.jsx';
 import AttemptQuiz from './pages/AttemptQuiz.jsx';
+import InterestForm from './pages/InterestForm.jsx';
 
 
 function App() {
@@ -48,6 +49,8 @@ function App() {
         <Route path="/teacher/assessments" element={<AssessmentsTeacher/>} />
         <Route path="/teacher/study-material" element={<StudyMaterialTeacher/>} />
         <Route path="/student/chat-ai" element={<Chatbot/>} /> 
+        <Route path="/student/interests" element={<InterestForm/>} /> 
+
 
 
         {/* <Route path="/student-login/code-editor" element={<JsCodeEditor/>} /> */}
@@ -59,7 +62,6 @@ function App() {
         <Route path="/live-classes" element={<LiveClasses/>} />
 
       </Routes>
-      <Footer />
 
     </Router>
   );

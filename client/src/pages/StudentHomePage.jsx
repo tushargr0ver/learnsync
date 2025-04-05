@@ -9,6 +9,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import StudentNavbar from '../components/StudentNavbar';
 import { supabase } from '../utils/supabaseClient';
 import VideoList from "../components/VideoList"
+import PersonalizedLearningCards from '../components/personalisedLearningCards';
 
     
 
@@ -162,6 +163,7 @@ return (
                     ))}
                 </div>
             </section>
+            <PersonalizedLearningCards/>
 
           
 
