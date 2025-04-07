@@ -61,7 +61,7 @@ function App() {
 
 
         {/* <Route path="/student-login/code-editor" element={<JsCodeEditor/>} /> */}
-        <Route path="/quiz" element={<Quiz/>}/>
+        <Route path="/student/quiz" element={<Quiz/>}/>
         <Route path="/contact" element={<ContactUs/>} />
         <Route path="/learn-more" element={<LearnMore/>} />
         <Route path="/ai-powered-learning" element={<AIPoweredLearning/>} />

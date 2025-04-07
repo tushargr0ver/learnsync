@@ -1,6 +1,7 @@
 import React from 'react';
 import StudentNavbar from '../components/StudentNavbar';
 import CodeEditor from './Code-editor';
+import Quiz from './Quiz';
 
 const LearningPractice = () => {
   return (
@@ -16,12 +17,10 @@ const LearningPractice = () => {
         </div>
 
         {/* Exams & Quizzes Section */}
-        <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-6xl mb-8">
+        <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-7xl mb-8">
           <h2 className="text-2xl font-semibold text-gray-900 mb-3">Exams & Quizzes</h2>
-          <p className="text-gray-700 mb-4">Take AI-generated or teacher-created quizzes to test your knowledge.</p>
-          <button className="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition transform hover:scale-105">
-            Start Quiz
-          </button>
+          <p className="text-gray-700 mb-4 text-xl">Take AI-generated or teacher-created quizzes to test your knowledge.</p>
+        <Quiz/>
         </div>
 
         {/* Code Editor Section */}
