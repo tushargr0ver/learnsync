@@ -192,8 +192,6 @@ app.post('/api/ask', async (req, res) => {
   }
 });
 
-
-
 app.post("/generate-quiz", async (req, res) => {
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
   console.log(GEMINI_API_KEY)
@@ -257,9 +255,6 @@ app.post("/generate-quiz", async (req, res) => {
   }
 });
 
-
-
-
 app.get("/api/quizzes/questions", async (req, res) => {
   try {
     const { quiz_id } = req.query; // Get quiz_id from query params
@@ -287,9 +282,6 @@ app.get("/api/quizzes/questions", async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-
-
 
 app.post("/api/quiz/attempt", async (req, res) => {
   try{
@@ -321,7 +313,6 @@ app.post("/api/quiz/attempt", async (req, res) => {
       res.status(500).json({ error: "Server error" });
   }
 });
-
 
 app.get('/api/related-content', async (req, res) => {
   const { topic } = req.query; // Get the topic from the frontend query params
@@ -374,8 +365,6 @@ app.get('/api/related-content', async (req, res) => {
     res.status(500).json({ error: 'Error fetching related content' });
   }
 });
-
-
 
 // Start the server
 app.listen(port, () => {
