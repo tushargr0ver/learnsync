@@ -43,9 +43,10 @@ function App() {
         <Route path="/ai-powered-learning" element={<AIPoweredLearning/>} />
         <Route path="/study" element={<StudyMaterials/>} />
         <Route path="/live-classes" element={<LiveClasses/>} />
-        <Route path="teacher/create/quiz/:quiz_name" element={<QuizByTeacher />} />
+        <Route path="teacher/create/quiz/:quizId" element={<QuizByTeacher />} />
         <Route path="/student/quizzes/:quiz_id" element={<AttemptQuiz />} />
       </Routes>
+      
       <Footer />
 
     </Router>

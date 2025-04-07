@@ -1,16 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar.jsx";
-import { useLocation, useParams, Link} from "react-router-dom";
+import { useLocation, useParams, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../utils/supabaseClient.js";
 
 const TeacherHomePage = () => {
 
-    const [quizName, setQuizName] = useState("");
-
     const navigate = useNavigate();
+    const [id, setId] = useState(' ')
 
-    //const { userId } = useParams();
+    useEffect(() => {
+        const savedSession = localStorage.getItem("supabaseSession");
 
+        const session = savedSession ? JSON.parse(savedSession) : null;
+        if (!session) navigate('/')
+        const user = session.user
+        if (user) setId(user.user_metadata.id)
+    }, [])
+
+    const [formData, setFormData] = useState({
+        quiz_name: "",
+        submission_date: "", 
+      });
+      
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((data) => ({
+
+            ...data,
+            [name]: value,
+        }));
+    }
 
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -33,7 +54,41 @@ const TeacherHomePage = () => {
         }
     };
 
-   
+    const handleQuizCreation = async (e) => {
+        e.preventDefault(); // Prevent page reload
+    
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    
+        if (sessionError || !sessionData?.session) {
+            navigate('/');
+            return;
+        }
+    
+        const user = sessionData.session.user;
+    
+        const { data, error } = await supabase
+            .from("quizzes")
+            .insert([
+                {
+                    quiz_name: formData.quiz_name,
+                    submission_date: formData.submission_date,
+                    created_by: user.id,
+                },
+            ])
+            .select()
+            .single();
+    
+        if (error) {
+            console.error("Error creating quiz:", error);
+            alert("Something went wrong while creating the quiz.");
+        } else {
+            const quizId = data.id;
+            console.log("Quiz created with ID:", quizId);
+            navigate(`/teacher/create/quiz/${quizId}`, { state: { quiz_name: formData.quiz_name } });
+        }
+    };
+    
+    
 
     const location = useLocation()
     const name = location.state?.user.user_metadata.full_name
@@ -42,7 +97,7 @@ const TeacherHomePage = () => {
         <div>
             <Navbar />
             <div className="container mx-auto px-6 py-8 bg-[#F8F9FA]">
-            {/* <h1>Welcome, Teacher {userId}</h1>  */}
+                {/* <h1>Welcome, Teacher {userId}</h1>  */}
 
                 {/* Header */}
                 <h1 className="text-3xl font-semibold text-gray-900">Welcome, Professor {name}!</h1>
@@ -163,26 +218,34 @@ const TeacherHomePage = () => {
                     </ul>
                 </section>
 
-                <section className="my-6">
+                <form onSubmit={handleQuizCreation} className="my-6">
                     <h2 className="text-2xl font-semibold text-gray-900 mb-2">Create Quiz for Students</h2>
                     <input
                         type="text"
                         placeholder="Enter Quiz Name"
-                        value={quizName}
-                        onChange={(event) => setQuizName(event.target.value)}
-                        className="border p-2 mb-2 w-96"
+                        name="quiz_name"
+                        value={formData.quiz_name}
+                        onChange={handleChange}
+                        className="border p-2 text-black mb-2 w-96"
                     />
+                    <input
+                        type="date"
+                        name="submission_date"
+                        value={formData.submission_date}
+                        onChange={handleChange}
+                        placeholder="Submission Date"
+                        className="border p-2 mb-2 text-black w-96"
+                    />
+
                     <button
-                        onClick={() => navigate(`/teacher/create/quiz/${quizName}`)}
+                        type="submit"
                         className="px-4 py-2 rounded-md bg-blue-500 text-white"
                     >
                         Create Quiz
                     </button>
 
-                    <Link className="text-black ml-3" to="/student/responses">Check Responses</Link>
 
-
-                </section>
+                </form>
 
 
             </div>
@@ -191,4 +254,5 @@ const TeacherHomePage = () => {
 };
 
 export default TeacherHomePage;
+
 
