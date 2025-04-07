@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import VideoPlayer from "./VideoPlayer";
 
@@ -8,7 +8,7 @@ function VideoList() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/videos") // Adjust this URL as needed
+      .get("http://localhost:8000/videos")
       .then((response) => setVideos(response.data))
       .catch((error) => console.error("Error fetching videos:", error));
   }, []);
@@ -20,17 +20,14 @@ function VideoList() {
 
   return (
     <div className="flex flex-col bg-white rounded-lg shadow mx-auto w-[95%] p-6 mt-12 ml-0">
-      {/* Header and video list in the same flex container */}
       <div className="flex flex-col w-full">
-        {/* Video Resources Heading */}
         <h1 className="text-3xl px-3 py-4 text-black/90 font-semibold self-start">
           Video Resources
         </h1>
 
-        {/* Video List */}
         {videos.length > 0 ? (
           <div className="flex flex-wrap gap-6 w-full">
-            {videos.map((videoUrl, index) => (
+            {videos.map((video, index) => (
               <div
                 key={index}
                 className="flex flex-col lg:flex-row items-start lg:items-center gap-6 bg-blue-500 w-full lg:w-[95%] p-5 rounded-lg shadow-lg"
@@ -42,7 +39,9 @@ function VideoList() {
                       controls: true,
                       responsive: true,
                       fluid: true,
-                      sources: [{ src: videoUrl, type: "application/x-mpegURL" }],
+                      sources: [
+                        { src: video.video_url, type: "application/x-mpegURL" },
+                      ],
                     }}
                     onReady={handlePlayerReady}
                   />
@@ -50,9 +49,11 @@ function VideoList() {
 
                 {/* Description Section */}
                 <div className="w-full lg:w-1/3 flex flex-col justify-center">
-                  <h2 className="text-3xl font-semibold">Video Name and Title</h2>
-                  <p className="text-xl text-black">
-                    Description of the video goes here.
+                  <h2 className="text-2xl font-semibold text-white">
+                    {video.title || "Untitled Video"}
+                  </h2>
+                  <p className="text-black text-md mt-2">
+                    {video.description || "No description provided."}
                   </p>
                 </div>
               </div>
@@ -67,4 +68,3 @@ function VideoList() {
 }
 
 export default VideoList;
-

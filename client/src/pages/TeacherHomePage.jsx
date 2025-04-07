@@ -23,6 +23,11 @@ if(session!=null) setName(session.user.user_metadata.full_name)
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [isVideoUploadOpen, setIsVideoUploadOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [videoTitle, setVideoTitle] = useState('');
+    const [videoDescription, setVideoDescription] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
+
+
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -54,35 +59,42 @@ if(session!=null) setName(session.user.user_metadata.full_name)
         }
     };
     const handleVideoUpload = async () => {
-        if (!selectedFile) {
-            alert("No file selected!");
-            return;
+        if (!selectedFile || !videoTitle || !videoDescription) {
+          alert("Please select a file and provide a title and description.");
+          return;
         }
-    
+        setIsUploading(true); 
+      
         const formData = new FormData();
         formData.append("videofile", selectedFile);
-    
+        formData.append("title", videoTitle);
+        formData.append("description", videoDescription);
+      
         try {
-            const response = await fetch("http://localhost:8000/uploadVideo", {
-                method: "POST",
-                body: formData
-            });
-    
-            const data = await response.json();
-    
-            if (response.ok) {
-                alert(`Video uploaded successfully! URL: ${data.videoUrl}`);
-                setSelectedFile(null);
-                setIsVideoUploadOpen(false);
-            } else {
-                alert(`Upload failed: ${data.error}`);
-            }
+          const response = await fetch("http://localhost:8000/uploadVideo", {
+            method: "POST",
+            body: formData
+          });
+      
+          const data = await response.json();
+      
+          if (response.ok) {
+            alert(`Video file ${selectedFile.name} uploaded successfully!`);
+            setSelectedFile(null);
+            setVideoTitle('');
+            setVideoDescription('');
+            setIsVideoUploadOpen(false);
+          } else {
+            alert(`Upload failed: ${data.error}`);
+          }
         } catch (error) {
-            console.error("Error uploading video:", error);
-            alert("An error occurred while uploading the video.");
-        }
-    };
-    
+          console.error("Error uploading video:", error);
+          alert("An error occurred while uploading the video.");
+        }finally {
+    setIsUploading(false); // <-- Hide loading
+  }
+      };
+      
 
 
     const navigate = useNavigate()
@@ -210,38 +222,71 @@ if(session!=null) setName(session.user.user_metadata.full_name)
                         </div>
                     </div>
                 )}
-                {isVideoUploadOpen && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                            <h2 className="text-xl font-semibold text-gray-900">Upload video resources</h2>
-                            <input
-                                type="file"
-                                accept="video/mp4,video/avi,video/mkv,video/mov,video/webm"
-                                onChange={handleVideoFileChange}
-                                className="w-full mt-3 p-2 border rounded-md"
-                                name="videofile"
-                            />
-                            {selectedFile && (
-                                <p className="text-gray-600 mt-2">Selected: {selectedFile.name}</p>
-                            )}
-                            <div className="flex justify-end gap-2 mt-4">
-                                <button
-                                    className="bg-gray-300 px-4 py-2 rounded-md"
-                                    onClick={() => setIsVideoUploadOpen(false)}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    className={`px-4 py-2 rounded-md ${selectedFile ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-gray-400 text-gray-200 cursor-not-allowed"}`}
-                                    disabled={!selectedFile}
-                                    onClick={handleVideoUpload}
-                                >
-                                    Upload
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+           {isVideoUploadOpen && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+      {isUploading ? (
+       
+        <div className="flex flex-col items-center justify-center space-y-4 py-8">
+          <div className="loader ease-linear rounded-full border-8 border-t-8 border-blue-500 h-16 w-16"></div>
+          <p className="text-lg font-medium text-gray-700">Uploading video, please wait...</p>
+        </div>
+      ) : (
+        <>
+          <h2 className="text-xl font-semibold text-gray-900">Upload video resources</h2>
+
+          {/* Title input */}
+          <input
+            type="text"
+            placeholder="Enter video title"
+            value={videoTitle}
+            onChange={(e) => setVideoTitle(e.target.value)}
+            className="text-black w-full mt-3 p-2 border rounded-md"
+          />
+
+          {/* Description input */}
+          <textarea
+            placeholder="Enter video description"
+            value={videoDescription}
+            onChange={(e) => setVideoDescription(e.target.value)}
+            className="text-black w-full mt-3 p-2 border rounded-md"
+          />
+
+          {/* Video file input */}
+          <input
+            type="file"
+            accept="video/mp4,video/avi,video/mkv,video/mov,video/webm"
+            onChange={handleVideoFileChange}
+            className="w-full mt-3 p-2 border rounded-md"
+            name="videofile"
+          />
+
+          {selectedFile && (
+            <p className="text-gray-600 mt-2">Selected: {selectedFile.name}</p>
+          )}
+
+          <div className="flex justify-end gap-2 mt-4">
+            <button
+              className="bg-gray-300 px-4 py-2 rounded-md"
+              onClick={() => setIsVideoUploadOpen(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className={`px-4 py-2 rounded-md ${selectedFile ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-gray-400 text-gray-200 cursor-not-allowed"}`}
+              disabled={!selectedFile}
+              onClick={handleVideoUpload}
+            >
+              Upload
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  </div>
+)}
+
+
 
                 {/* Recent Activity */}
                 <section className="my-6">
