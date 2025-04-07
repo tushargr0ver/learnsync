@@ -315,25 +315,21 @@ app.post("/api/quiz/attempt", async (req, res) => {
 });
 
 app.get('/api/related-content', async (req, res) => {
-  const { topic } = req.query; // Get the topic from the frontend query params
-  const GEMINI_API_KEY = process.env.GEMINI_API_KEY; // Retrieve the API key from environment variables
+  const { topic } = req.query;
+  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-  // Log the API key and topic for debugging purposes
-  console.log("GEMINI_API_KEY:", GEMINI_API_KEY); 
-  console.log("Topic received:", topic); 
+  console.log("GEMINI_API_KEY:", GEMINI_API_KEY);
+  console.log("Topic received:", topic);
 
-  // Check if the API key is missing
   if (!GEMINI_API_KEY) {
     return res.status(500).json({ error: "GEMINI_API_KEY not set." });
   }
 
-  // Check if the topic is missing
   if (!topic) {
     return res.status(400).json({ error: 'Topic is required' });
   }
 
   try {
-    // Make a POST request to the Gemini API
     const response = await axios.post(
       'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent',
       {
@@ -341,7 +337,7 @@ app.get('/api/related-content', async (req, res) => {
           {
             parts: [
               {
-                text: `Generate related content on ${topic}.`, // Send the topic dynamically to generate content
+                text: `Generate related content on ${topic}.`,
               },
             ],
           },
@@ -349,22 +345,33 @@ app.get('/api/related-content', async (req, res) => {
       },
       {
         headers: {
-          'Content-Type': 'application/json', // Ensure correct content type is set
-          'x-goog-api-key': GEMINI_API_KEY, // Attach the API key in the headers
+          'Content-Type': 'application/json',
+        },
+        params: {
+          key: GEMINI_API_KEY,
         },
       }
     );
 
-    console.log("Gemini API response data:", response.data); // Log the response data for debugging
+    const content = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    // Send the generated content as a response to the frontend
-    res.json(response.data);
+    if (!content) {
+      return res.status(500).json({ error: 'Failed to extract content from Gemini response' });
+    }
+
+    console.log("Gemini response content:", content);
+    res.json({ content }); // Only sending the text content
   } catch (error) {
-    // Log error if the API request fails
     console.error('Error fetching related content from Gemini:', error.response?.data || error.message);
     res.status(500).json({ error: 'Error fetching related content' });
   }
 });
+
+
+
+
+
+
 
 // Start the server
 app.listen(port, () => {

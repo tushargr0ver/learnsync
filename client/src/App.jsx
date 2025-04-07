@@ -23,6 +23,8 @@ import QuizByTeacher from './pages/QuizByTeacher.jsx';
 import AttemptQuiz from './pages/AttemptQuiz.jsx';
 import InterestForm from './pages/InterestForm.jsx';
 
+import PersonalisedLearning from './pages/PersonalisedLearning.jsx';
+
 
 function App() {
   return (
@@ -49,7 +51,8 @@ function App() {
         <Route path="/teacher/assessments" element={<AssessmentsTeacher/>} />
         <Route path="/teacher/study-material" element={<StudyMaterialTeacher/>} />
         <Route path="/student/chat-ai" element={<Chatbot/>} /> 
-        <Route path="/student/interests" element={<InterestForm/>} /> 
+        <Route path="/student/interests" element={<InterestForm/>} />
+        <Route path="/student/personalised-learning" element={<PersonalisedLearning/>}/>
 
 
 
