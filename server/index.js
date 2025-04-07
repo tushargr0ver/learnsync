@@ -107,10 +107,10 @@ app.get("/videos", async (req, res) => {
 app.get('/messages/:group_id', async (req, res) => {
   const { group_id } = req.params;
   const { data, error } = await supabase
-      .from('messages')
-      .select('*')
-      .eq('group_id', group_id)
-      .order('created_at', { ascending: true });
+    .from('messages')
+    .select('*')
+    .eq('group_id', group_id)
+    .order('created_at', { ascending: true });
 
   if (error) return res.status(400).json({ error });
   res.json(data);
@@ -120,9 +120,9 @@ app.get('/messages/:group_id', async (req, res) => {
 app.post('/messages/', async (req, res) => {
   const { group_id, sender_id, content } = req.body;
   const { data, error } = await supabase
-      .from('messages')
-      .insert([{ group_id, sender_id, content }])
-      .select('*')
+    .from('messages')
+    .insert([{ group_id, sender_id, content }])
+    .select('*')
 
   if (error) return res.status(400).json({ error });
   res.json(data);
@@ -131,25 +131,25 @@ app.post('/messages/', async (req, res) => {
 
 app.post("/execute", async (req, res) => {
   try {
-      const { script, language, versionIndex } = req.body;
-      const response = await axios.post("https://api.jdoodle.com/v1/execute", {
-          clientId: JDoodle_CLIENT_ID,
-          clientSecret: JDoodle_CLIENT_SECRET,
-          script,
-          language,
-          versionIndex,
-      });
+    const { script, language, versionIndex } = req.body;
+    const response = await axios.post("https://api.jdoodle.com/v1/execute", {
+      clientId: JDoodle_CLIENT_ID,
+      clientSecret: JDoodle_CLIENT_SECRET,
+      script,
+      language,
+      versionIndex,
+    });
 
-      res.json(response.data);
+    res.json(response.data);
   } catch (error) {
-      res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
 app.post('/api/ask', async (req, res) => {
   const { question } = req.body;
   const apiKey = process.env.GEMINI_API_KEY;
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`; 
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
 
   if (!apiKey) {
     return res.status(500).json({ error: 'GEMINI_API_KEY not set.' });
@@ -167,16 +167,16 @@ app.post('/api/ask', async (req, res) => {
         }]
       }]
     },
-    {
+      {
         headers: {
-            'Content-Type': 'application/json',
-            'x-goog-api-key': apiKey, 
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey,
         }
-    });
+      });
 
     if (!response.data || !response.data.candidates || response.data.candidates.length === 0 || !response.data.candidates[0].content || !response.data.candidates[0].content.parts || response.data.candidates[0].content.parts.length === 0) {
-        console.error('Gemini API response malformed:', response.data);
-        return res.status(500).json({error: 'Gemini API response malformed'});
+      console.error('Gemini API response malformed:', response.data);
+      return res.status(500).json({ error: 'Gemini API response malformed' });
     }
 
     const answer = response.data.candidates[0].content.parts[0].text;
@@ -191,8 +191,6 @@ app.post('/api/ask', async (req, res) => {
     res.status(500).json({ error: 'Failed to get answer from Gemini API.' });
   }
 });
-
-
 
 app.post("/generate-quiz", async (req, res) => {
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -257,12 +255,6 @@ app.post("/generate-quiz", async (req, res) => {
   }
 });
 
-
-app.get("/", (req,res)=>{
-  res.send("Server is running")
-})
-
-
 app.get("/api/quizzes/questions", async (req, res) => {
   try {
     const { quiz_id } = req.query; // Get quiz_id from query params
@@ -291,39 +283,111 @@ app.get("/api/quizzes/questions", async (req, res) => {
   }
 });
 
-
-
-
 app.post("/api/quiz/attempt", async (req, res) => {
-  try{
-  const { quiz_id, student_id, answers } = req.body; 
+  try {
+    const { quiz_id, student_id, answers } = req.body;
 
-        if (!quiz_id || !student_id || !answers || Object.keys(answers).length === 0) {
-            return res.status(400).json({ error: "Quiz ID, student ID, and answers are required" });
-        }
+    if (!quiz_id || !student_id || !answers || Object.keys(answers).length === 0) {
+      return res.status(400).json({ error: "Quiz ID, student ID, and answers are required" });
+    }
 
-        const responsesArray = Object.keys(answers).map((question_id) => ({
-            quiz_id: quiz_id,
-            student_id: student_id, // Include student ID
-            question_id: question_id,
-            response: answers[question_id], // Store selected answer
-        }));
+    const responsesArray = Object.keys(answers).map((question_id) => ({
+      quiz_id: quiz_id,
+      student_id: student_id, // Include student ID
+      question_id: question_id,
+      response: answers[question_id], // Store selected answer
+    }));
 
-      const { data, error } = await supabase
-          .from("responses")
-          .insert(responsesArray);
+    const { data, error } = await supabase
+      .from("responses")
+      .insert(responsesArray);
 
-      if (error) {
-          console.error("Supabase Error:", error);
-          return res.status(500).json({ error: "Failed to save responses" });
-      }
+    if (error) {
+      console.error("Supabase Error:", error);
+      return res.status(500).json({ error: "Failed to save responses" });
+    }
 
-      res.status(201).json({ message: "Responses saved successfully", data });
-  } catch  (err) {
-      console.error("Server Error:", err);
-      res.status(500).json({ error: "Server error" });
+    res.status(201).json({ message: "Responses saved successfully", data });
+  } catch (err) {
+    console.error("Server Error:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
+
+app.get('/api/related-content', async (req, res) => {
+  const { topic } = req.query;
+  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+  if (!GEMINI_API_KEY) return res.status(500).json({ error: "GEMINI_API_KEY not set." });
+  if (!topic) return res.status(400).json({ error: 'Topic is required' });
+
+  try {
+    const prompt = `
+      Provide an informative and useful learning pack for the topic "${topic}" in JSON format with the following structure:
+
+      1. "summary" – Give a most informative paragraphs realted to the topic.
+      2. "key_concepts" – Give all the relevent an dessential skills required relaetd to the topic.
+      3. "important_facts" – 3-4 practical insights, industry trends, or stats.
+      4. "examples" – 2-3 real-world uses or applications for better understanding.
+      5. "roadmap" – 3-6 step structured path to master this topic, give stesp and guide the person aht he needs to do to master the topic.
+      6. "video_resources" – 2-4 good YouTube video titles + links.
+      7. "website_resources" – 2-4 blogs or tutorial links with titles.
+      8. "quiz" – 3-5 multiple choice questions with:
+         - question, options (A-D), correct answer, explanation
+      9. "related_topics" – 3-5 relevant or advanced topics.
+
+      Output format:
+      {
+        "summary": "...",
+        "key_concepts": ["..."],
+        "important_facts": ["..."],
+        "examples": ["..."],
+        "roadmap": ["..."],
+        "video_resources": [
+          { "title": "...", "link": "..." }
+        ],
+        "website_resources": [
+          { "title": "...", "link": "..." }
+        ],
+        "quiz": [
+          {
+            "question": "...",
+            "options": ["A", "B", "C", "D"],
+            "answer": "B",
+            "explanation": "..."
+          }
+        ],
+        "related_topics": ["..."]
+      }
+    `;
+
+    const response = await axios.post(
+      'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent',
+      { contents: [{ parts: [{ text: prompt }] }] },
+      {
+        headers: { 'Content-Type': 'application/json' },
+        params: { key: GEMINI_API_KEY }
+      }
+    );
+
+    const text = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+console.log("Gemini raw response:", text); // 👈 Add this line
+
+    if (!text) return res.status(500).json({ error: 'No response from Gemini' });
+
+    const cleanedText = text.replace(/```json|```/g, '').trim();
+    const json = JSON.parse(cleanedText);
+
+    res.json(json);
+  } catch (error) {
+    console.error("Gemini API error:", error.response?.data || error.message);
+    res.status(500).json({ error: 'Error fetching structured content' });
+  }
+});
+
+
+
+
 
 
 
