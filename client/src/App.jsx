@@ -28,7 +28,7 @@ function App() {
     <Router>
       <Routes>
 
-      <Route path="teacher/create/quiz/:quiz_name" element={<QuizByTeacher />} />
+      <Route path="teacher/create/quiz/:quizId" element={<QuizByTeacher />} />
       <Route path="/student/quizzes/:quiz_id" element={<AttemptQuiz />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignUp/>} />
