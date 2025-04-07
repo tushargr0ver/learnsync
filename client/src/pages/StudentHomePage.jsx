@@ -9,7 +9,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import StudentNavbar from '../components/StudentNavbar';
 import { supabase } from '../utils/supabaseClient';
 import VideoList from "../components/VideoList"
-import PersonalizedLearningCards from '../components/personalisedLearningCards';
+import PersonalizedLearningCards from './PersonalisedLearningCards';
 
 
 
@@ -77,7 +77,7 @@ const StudentHomePage = () => {
                         </button>
                     </div>
                 </header>
-
+             
                 <section className="my-6">
                     <h2 className="text-3xl px-3 py-6 text-black/90 font-semibold">Live Sessions</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -104,6 +104,7 @@ const StudentHomePage = () => {
                     </div>
                     <VideoList />
                 </section>
+
 
                 <section>
                     <h2 className="text-3xl px-3 py-6 text-black/90 font-semibold">Notes & Materials</h2>
@@ -163,7 +164,13 @@ const StudentHomePage = () => {
                         ))}
                     </div>
                 </section>
-                <PersonalizedLearningCards />
+
+                
+                <section className="my-6">
+
+
+<PersonalizedLearningCards className="max-h-60"/>
+</section>
 
 
 
