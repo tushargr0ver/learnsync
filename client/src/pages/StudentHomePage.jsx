@@ -6,7 +6,26 @@ import notesRed from "../assets/notes_red.png";
 import bell from "../assets/bell.png";
 import schedule from "../assets/schedule.png";
 
+import { useEffect } from "react";
+import { supabase } from "../utils/supabaseClient";
+
 const StudentHomePage = () => {
+    const [id, setId] = useState(' ')
+
+    useEffect(() => {
+        const savedSession = localStorage.getItem("supabaseSession");
+
+        const session = savedSession ? JSON.parse(savedSession) : null;
+
+        if (!session) navigate('/')
+
+
+        const user = session.user
+        if (user) setId(user.user_metadata.id)
+    }, [])
+
+
+
     return (
         <>
             <Navbar />

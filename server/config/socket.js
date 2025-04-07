@@ -1,34 +1,25 @@
-let io = null;
+const { Server } = require("socket.io");
 
-const initSocket = (server) => {
-  const { Server } = require("socket.io");
-
-  io = new Server(server, {
+function initSocket(server) { //	Creating a new Socket.IO server, and attaching it to your raw HTTP server.
+  const io = new Server(server, {
     cors: {
-      origin: "*", // update in prod
+      origin: "http://localhost:5173", //allows req from frontend
       methods: ["GET", "POST"]
     }
   });
 
-  io.on("connection", (socket) => {
-    console.log(`User connected: ${socket.id}`);
+  io.on("connection", (socket) => { //triggers when a new client connects, each tab gets socket.id
+    console.log("New client connected:", socket.id); 
 
-    socket.on("send_message", (data) => {
-      console.log("Received message:", data);
-      io.emit("receive_message", data); // broadcast
+    socket.on("message", (data) => {
+      console.log("Message received:", data);
+      io.emit("message", data); // Broadcast message to all
     });
 
     socket.on("disconnect", () => {
-      console.log("User disconnected:", socket.id);
+      console.log("🔌 Client disconnected:", socket.id);
     });
   });
-};
+}
 
-const getIO = () => {
-  if (!io) {
-    throw new Error("Socket.io not initialized");
-  }
-  return io;
-};
-
-module.exports = { initSocket, getIO };
+module.exports = { initSocket };

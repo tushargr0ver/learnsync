@@ -30,8 +30,8 @@ function App() {
         <Route path="/teacher-login/study-material" element={<StudyMaterialTeacher/>} />
         <Route path="/student-login/chat-ai" element={<Chatbot/>} /> 
         <Route path="/student-login/code-editor" element={<JsCodeEditor/>} />
-        <Route path="/student-login/community" element={<Community/>} />
-        <Route path="/teacher-login/community" element={<Community/>} />
+        <Route path="/student/community" element={<Community/>} />
+        <Route path="/teacher/community" element={<Community/>} />
 
 
         <Route path="/quiz" element={<Quiz/>}/>

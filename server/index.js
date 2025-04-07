@@ -2,23 +2,24 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const  supabase = require('./config/supabase.js')
-const http = require("http");
-const { initSocket } = require("./config/socket");
+const supabase = require('./config/supabase.js');
+
+const http = require('http'); // Required to create raw server for socket.io
+const { initSocket } = require('./config/socket'); // Socket.io initialization
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-console.log(process.env.SUPABASE_KEY)
-
 app.use(cors());
 app.use(express.json());
 
-const server = http.createServer(app);
+const server = http.createServer(app);  // Create HTTP server from Express
 
-initSocket(server);
+initSocket(server); // Initialize socket.io with the server
+
+
 
 // Get all messages (fetching the messages based of group_id)
 app.get('/messages/:group_id', async (req, res) => {
@@ -44,7 +45,6 @@ app.post('/messages/', async (req, res) => {
   if (error) return res.status(400).json({ error });
   res.json(data);
 });
-
 
 app.post("/execute", async (req, res) => {
   try {
@@ -108,8 +108,6 @@ app.post('/api/ask', async (req, res) => {
     res.status(500).json({ error: 'Failed to get answer from Gemini API.' });
   }
 });
-
-
 
 app.post("/generate-quiz", async (req, res) => {
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -177,8 +175,8 @@ app.get("/", (req,res)=>{
 })
 
 server.listen(port, () => {
-  if (!process.env.GEMINI_API_KEY){
-    console.error('GEMINI_API_KEY not set. Server will not function correctly');
+  if (!process.env.GEMINI_API_KEY) {
+    console.error('❌ GEMINI_API_KEY not set. Server may not function correctly.');
   }
-  console.log(`Server listening on port ${port}`);
+  console.log(`✅ Server listening on port ${port}`);
 });
