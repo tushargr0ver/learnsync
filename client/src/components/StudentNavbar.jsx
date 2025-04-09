@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ProfilePopover from "../components/Popover"
 const StudentNavbar = () => {
   // const location = useLocation();
 
@@ -63,11 +64,12 @@ const StudentNavbar = () => {
         </div>
 
         <div className="ml-auto">
-          <img
+          {/* <img
             src="https://randomuser.me/api/portraits/men/1.jpg"
             alt="Profile"
             className="w-10 h-10 rounded-full border mr-4 border-gray-300"
-          />
+          /> */}
+        <ProfilePopover/>
         </div>
       </div>
     </nav>

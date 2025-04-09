@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import TeacherNavbar from "../components/TeacherNavbar.jsx";
-import { useLocation, useParams, Link } from "react-router-dom";
+// import { useLocation, useParams, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../utils/supabaseClient.js";
 
@@ -8,15 +8,20 @@ const TeacherHomePage = () => {
 
     const navigate = useNavigate();
     const [id, setId] = useState(' ')
+    const [name,setName] = useState('')
 
-    useEffect(() => {
-        const savedSession = localStorage.getItem("supabaseSession");
+   
+        useEffect(()=>{
+            const savedSession = localStorage.getItem("supabaseSession");
+            if(!savedSession) navigate('/login');
+            
+    const session = savedSession ? JSON.parse(savedSession) : null;
+    if(session.user.user_metadata.role!='teacher') navigate('/')
+console.log(session);
+if(session!=null) setName(session.user.user_metadata.full_name)
 
-        const session = savedSession ? JSON.parse(savedSession) : null;
-        if (!session) navigate('/')
-        const user = session.user
-        if (user) setId(user.user_metadata.id)
-    }, [])
+    
+        },[])
 
     const [formData, setFormData] = useState({
         quiz_name: "",
@@ -64,7 +69,7 @@ const TeacherHomePage = () => {
             return;
         }
     
-        const user = sessionData.session.user;
+        // const user = sessionData.session.user;
     
         const { data, error } = await supabase
             .from("quizzes")
@@ -90,8 +95,8 @@ const TeacherHomePage = () => {
     
     
 
-    const location = useLocation()
-    const name = location.state?.user.user_metadata.full_name
+    // const location = useLocation()
+    // const name = location.state?.user.user_metadata.full_name
 
     return (
         <div>
